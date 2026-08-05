@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Marginal — commentary on everything</title>
+<link rel="stylesheet" href="styles.css" />
+<meta name="google-site-verification" content="7qRRkFIPIqKvsPJc9_RIeOw3w_-d6qbxXUV7sJgWmeo" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="mark">“</span>Marginal</a>
+    <a href="https://chrome.google.com/webstore" target="_blank" rel="noopener" class="btn primary">Get the extension</a>
+  </header>
+  <div class="container">
+    <h1 style="font-size:22px;margin-bottom:4px;">Public feed</h1>
+    <p style="color:#777;margin-top:0;">Commentary on the internet, always linked back to its source.</p>
+    <div id="feed"></div>
+  </div>
+
+  <script src="https://esm.sh/@supabase/supabase-js@2" type="module" id="sb-loader"></script>
+  <script src="config.js"></script>
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    const cfg = window.MARGINAL_CONFIG;
+    const supabase = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+
+    function escapeHtml(str) {
+      return (str || "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+    }
+    function initials(name) { return (name || "?").trim().slice(0, 2).toUpperCase(); }
+
+    async function loadFeed() {
+      const feedEl = document.getElementById("feed");
+      const { data, error } = await supabase.from("clips_feed").select("*").limit(50);
+      if (error) {
+        feedEl.innerHTML = `<p class="empty">Couldn't load the feed: ${escapeHtml(error.message)}</p>`;
+        return;
+      }
+      if (!data || data.length === 0) {
+        feedEl.innerHTML = `<p class="empty">No clips published yet. Be the first with the Marginal extension.</p>`;
+        return;
+      }
+      feedEl.innerHTML = data.map((c) => `
+        <a class="feed-item" href="clip.html?slug=${encodeURIComponent(c.slug)}">
+          <div class="card">
+            <div class="author-row">
+              <span class="avatar">${initials(c.author_display_name || c.author_username)}</span>
+              ${escapeHtml(c.author_display_name || c.author_username)}
+            </div>
+            <blockquote class="quote" style="font-size:16px;">"${escapeHtml(c.quoted_text.slice(0, 220))}${c.quoted_text.length > 220 ? "…" : ""}"</blockquote>
+            ${c.commentary ? `<div class="commentary" style="font-size:14px;">${escapeHtml(c.commentary.slice(0, 180))}</div>` : ""}
+            <div class="meta">from ${escapeHtml(c.source_domain || "")} · ${new Date(c.created_at).toLocaleDateString()}</div>
+          </div>
+        </a>
+      `).join("");
+    }
+    loadFeed();
+  </script>
+</body>
+</html>
