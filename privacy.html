@@ -1,83 +1,935 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
-    <title>ClipNote Privacy Policy</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            line-height: 1.6;
+```
+<title>Privacy Policy — ClipNote</title>
+
+<meta
+    name="description"
+    content="Learn how ClipNote handles your notes, webpage information, and privacy."
+>
+
+<meta name="theme-color" content="#0b0d12">
+
+<style>
+    :root {
+        --bg: #080a0f;
+        --surface: rgba(255, 255, 255, 0.055);
+        --surface-hover: rgba(255, 255, 255, 0.075);
+        --border: rgba(255, 255, 255, 0.10);
+        --text: #f7f8fb;
+        --muted: #a7adba;
+        --accent: #7c5cff;
+        --accent-2: #5ee7df;
+        --success: #5ee7a1;
+        --max-width: 920px;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+
+        font-family:
+            Inter,
+            ui-sans-serif,
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            sans-serif;
+
+        color: var(--text);
+
+        background:
+            radial-gradient(
+                circle at 15% 0%,
+                rgba(124, 92, 255, 0.18),
+                transparent 32%
+            ),
+            radial-gradient(
+                circle at 85% 10%,
+                rgba(94, 231, 223, 0.10),
+                transparent 28%
+            ),
+            var(--bg);
+
+        line-height: 1.7;
+    }
+
+    a {
+        color: inherit;
+    }
+
+    /* ---------- HEADER ---------- */
+
+    .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+
+        background: rgba(8, 10, 15, 0.78);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+        width: min(100% - 40px, var(--max-width));
+        margin: 0 auto;
+
+        min-height: 70px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 19px;
+        letter-spacing: -0.03em;
+    }
+
+    .brand-icon {
+        width: 34px;
+        height: 34px;
+
+        display: grid;
+        place-items: center;
+
+        border-radius: 10px;
+
+        background:
+            linear-gradient(
+                135deg,
+                var(--accent),
+                var(--accent-2)
+            );
+
+        color: white;
+        font-size: 18px;
+
+        box-shadow:
+            0 8px 30px rgba(124, 92, 255, 0.28);
+    }
+
+    .back-link {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+
+        transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: white;
+    }
+
+    /* ---------- HERO ---------- */
+
+    .hero {
+        width: min(100% - 40px, var(--max-width));
+        margin: 0 auto;
+
+        padding: 85px 0 55px;
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 7px 12px;
+
+        border: 1px solid rgba(94, 231, 223, 0.18);
+        border-radius: 999px;
+
+        background: rgba(94, 231, 223, 0.06);
+
+        color: #a9fff7;
+
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .eyebrow-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--success);
+        box-shadow: 0 0 12px rgba(94, 231, 161, 0.8);
+    }
+
+    h1 {
+        max-width: 760px;
+
+        margin: 22px 0 15px;
+
+        font-size: clamp(42px, 7vw, 72px);
+        line-height: 1.02;
+        letter-spacing: -0.055em;
+    }
+
+    .hero-description {
+        max-width: 680px;
+
+        margin: 0;
+
+        color: var(--muted);
+        font-size: 18px;
+    }
+
+    .updated {
+        margin-top: 24px;
+
+        color: #747b89;
+        font-size: 13px;
+    }
+
+    /* ---------- LAYOUT ---------- */
+
+    .page-layout {
+        width: min(100% - 40px, var(--max-width));
+        margin: 0 auto 100px;
+
+        display: grid;
+        grid-template-columns: 210px minmax(0, 1fr);
+        gap: 45px;
+    }
+
+    .toc {
+        position: sticky;
+        top: 100px;
+        align-self: start;
+    }
+
+    .toc-title {
+        margin-bottom: 12px;
+
+        color: #747b89;
+
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    .toc a {
+        display: block;
+
+        padding: 7px 0;
+
+        color: var(--muted);
+
+        font-size: 13px;
+        text-decoration: none;
+
+        transition:
+            color 0.2s ease,
+            transform 0.2s ease;
+    }
+
+    .toc a:hover {
+        color: white;
+        transform: translateX(3px);
+    }
+
+    /* ---------- CONTENT ---------- */
+
+    .content {
+        min-width: 0;
+    }
+
+    .privacy-card {
+        padding: clamp(25px, 5vw, 45px);
+
+        border: 1px solid var(--border);
+        border-radius: 24px;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.055),
+                rgba(255, 255, 255, 0.025)
+            );
+
+        box-shadow:
+            0 25px 80px rgba(0, 0, 0, 0.28);
+    }
+
+    section {
+        scroll-margin-top: 100px;
+    }
+
+    section + section {
+        margin-top: 55px;
+        padding-top: 55px;
+
+        border-top: 1px solid var(--border);
+    }
+
+    h2 {
+        margin: 0 0 15px;
+
+        font-size: 25px;
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+    }
+
+    h3 {
+        margin: 28px 0 8px;
+
+        font-size: 17px;
+    }
+
+    p {
+        margin: 0 0 15px;
+        color: #c5c9d2;
+    }
+
+    ul {
+        margin: 14px 0 0;
+        padding-left: 22px;
+
+        color: #c5c9d2;
+    }
+
+    li {
+        margin: 9px 0;
+    }
+
+    strong {
+        color: white;
+    }
+
+    /* ---------- TRUST CARDS ---------- */
+
+    .privacy-summary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+
+        margin: 25px 0 45px;
+    }
+
+    .summary-card {
+        padding: 18px;
+
+        border: 1px solid var(--border);
+        border-radius: 16px;
+
+        background: rgba(255, 255, 255, 0.035);
+    }
+
+    .summary-icon {
+        font-size: 22px;
+        margin-bottom: 9px;
+    }
+
+    .summary-card strong {
+        display: block;
+        margin-bottom: 4px;
+
+        font-size: 14px;
+    }
+
+    .summary-card span {
+        display: block;
+
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    /* ---------- NOTICE ---------- */
+
+    .notice {
+        margin: 25px 0;
+
+        padding: 18px 20px;
+
+        border-left: 3px solid var(--accent);
+
+        border-radius: 0 14px 14px 0;
+
+        background:
+            rgba(124, 92, 255, 0.08);
+
+        color: #d9d5ff;
+    }
+
+    .notice strong {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    /* ---------- DATA TABLE ---------- */
+
+    .data-table {
+        overflow-x: auto;
+
+        margin-top: 20px;
+
+        border: 1px solid var(--border);
+        border-radius: 14px;
+    }
+
+    table {
+        width: 100%;
+        min-width: 600px;
+
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 14px 16px;
+
+        border-bottom: 1px solid var(--border);
+
+        text-align: left;
+        vertical-align: top;
+
+        font-size: 13px;
+    }
+
+    th {
+        color: white;
+        background: rgba(255, 255, 255, 0.045);
+
+        font-size: 12px;
+    }
+
+    td {
+        color: var(--muted);
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* ---------- CONTACT ---------- */
+
+    .contact-box {
+        margin-top: 22px;
+        padding: 22px;
+
+        border: 1px solid rgba(124, 92, 255, 0.25);
+        border-radius: 17px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(124, 92, 255, 0.10),
+                rgba(94, 231, 223, 0.04)
+            );
+    }
+
+    .contact-box a {
+        color: #bcb0ff;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .contact-box a:hover {
+        text-decoration: underline;
+    }
+
+    /* ---------- FOOTER ---------- */
+
+    footer {
+        width: min(100% - 40px, var(--max-width));
+        margin: 0 auto;
+
+        padding: 30px 0 55px;
+
+        border-top: 1px solid var(--border);
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+
+        color: #6f7684;
+        font-size: 12px;
+    }
+
+    footer a {
+        color: #9a91d8;
+        text-decoration: none;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
+
+    /* ---------- MOBILE ---------- */
+
+    @media (max-width: 760px) {
+
+        .header-inner,
+        .hero,
+        .page-layout,
+        footer {
+            width: min(100% - 28px, var(--max-width));
         }
 
-        h1, h2 {
-            color: #222;
+        .hero {
+            padding-top: 55px;
         }
-    </style>
+
+        .page-layout {
+            display: block;
+        }
+
+        .toc {
+            position: static;
+
+            margin-bottom: 25px;
+            padding: 16px;
+
+            border: 1px solid var(--border);
+            border-radius: 15px;
+
+            background: rgba(255, 255, 255, 0.035);
+        }
+
+        .toc a {
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        .privacy-summary {
+            grid-template-columns: 1fr;
+        }
+
+        .privacy-card {
+            border-radius: 18px;
+        }
+
+        footer {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        * {
+            transition: none !important;
+        }
+    }
+</style>
+```
+
 </head>
 
 <body>
 
-<h1>ClipNote Privacy Policy</h1>
+<header class="site-header">
+    <div class="header-inner">
 
-<p>
-Last updated: August 2026
-</p>
+```
+    <a class="brand" href="index.html" aria-label="ClipNote home">
+        <span class="brand-icon">“</span>
+        Marginal
+    </a>
 
-<p>
-ClipNote helps users create annotations, notes, and summaries from web content.
-</p>
+    <a class="back-link" href="index.html">
+        ← Back to Marginal
+    </a>
 
-<h2>Information We Collect</h2>
+</div>
+```
 
-<p>
-ClipNote may collect:
-</p>
+</header>
 
-<ul>
-<li>Email address and account information for user authentication.</li>
-<li>User-created annotations and comments.</li>
-<li>Text selected by users for annotation.</li>
-<li>Source information such as webpage URLs and titles.</li>
-<li>AI-generated summaries when users request AI features.</li>
-</ul>
+<main>
 
-<h2>How We Use Information</h2>
+```
+<section class="hero">
 
-<ul>
-<li>Provide annotation and note-taking features.</li>
-<li>Save and synchronize user content.</li>
-<li>Create user profiles.</li>
-<li>Generate AI summaries when requested.</li>
-</ul>
+    <span class="eyebrow">
+        <span class="eyebrow-dot"></span>
+        Privacy first
+    </span>
 
-<h2>Website Access</h2>
+    <h1>
+        Your notes are yours.
+    </h1>
 
-<p>
-ClipNote only accesses webpage information when users interact with the extension and choose to create an annotation. ClipNote does not collect general browsing history.
-</p>
+    <p class="hero-description">
+        This page explains what information ClipNote handles,
+        why it is used, and what choices you have over your data.
+    </p>
 
-<h2>Data Sharing</h2>
+    <p class="updated">
+        Last updated: August 8, 2026
+    </p>
 
-<p>
-ClipNote does not sell user data. Information is only shared with service providers needed to operate the application.
-</p>
+</section>
 
-<h2>Data Security</h2>
 
-<p>
-We take reasonable measures to protect user information.
-</p>
+<div class="page-layout">
 
-<h2>Contact</h2>
+    <nav class="toc" aria-label="Privacy policy sections">
 
-<p>
-For privacy questions, contact: your-email@example.com
-</p>
+        <div class="toc-title">
+            On this page
+        </div>
+
+        <a href="#overview">Overview</a>
+        <a href="#information">Information</a>
+        <a href="#usage">How we use it</a>
+        <a href="#webpages">Webpage access</a>
+        <a href="#sharing">Data sharing</a>
+        <a href="#security">Security</a>
+        <a href="#choices">Your choices</a>
+        <a href="#changes">Changes</a>
+        <a href="#contact">Contact</a>
+
+    </nav>
+
+
+    <article class="content">
+
+        <div class="privacy-card">
+
+            <div class="privacy-summary">
+
+                <div class="summary-card">
+                    <div class="summary-icon">🔒</div>
+                    <strong>Your control</strong>
+                    <span>
+                        You control the content you create and save.
+                    </span>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-icon">🌐</div>
+                    <strong>Web access</strong>
+                    <span>
+                        Webpage information is accessed when needed for ClipNote features.
+                    </span>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-icon">🚫</div>
+                    <strong>No selling</strong>
+                    <span>
+                        We do not sell your personal information.
+                    </span>
+                </div>
+
+            </div>
+
+
+            <section id="overview">
+
+                <h2>1. Overview</h2>
+
+                <p>
+                    ClipNote helps you save, annotate, organize, and
+                    revisit useful information from the web.
+                </p>
+
+                <p>
+                    We designed ClipNote to make your data practices
+                    understandable. This Privacy Policy explains what
+                    information may be processed when you use ClipNote
+                    and how that information is used.
+                </p>
+
+                <div class="notice">
+                    <strong>In simple terms</strong>
+                    ClipNote only uses information that is necessary
+                    to provide the features you choose to use.
+                </div>
+
+            </section>
+
+
+            <section id="information">
+
+                <h2>2. Information We Handle</h2>
+
+                <p>
+                    Depending on the features you use, ClipNote may
+                    process the following information:
+                </p>
+
+                <div class="data-table">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Information</th>
+                                <th>Why it may be needed</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>Account information</td>
+                                <td>
+                                    To authenticate users and provide
+                                    account-related functionality.
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Notes and annotations</td>
+                                <td>
+                                    To save and display the content
+                                    you create.
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Selected webpage text</td>
+                                <td>
+                                    To create the clip or annotation
+                                    you explicitly request.
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Webpage URL and title</td>
+                                <td>
+                                    To identify and link your saved
+                                    content back to its source.
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>AI-generated content</td>
+                                <td>
+                                    To provide AI features when you
+                                    explicitly request them.
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <section id="usage">
+
+                <h2>3. How We Use Information</h2>
+
+                <p>
+                    Information handled by ClipNote may be used to:
+                </p>
+
+                <ul>
+                    <li>Provide note-taking and annotation features.</li>
+                    <li>Save and display your clips and notes.</li>
+                    <li>Connect saved notes with their source webpages.</li>
+                    <li>Provide account functionality where applicable.</li>
+                    <li>Generate AI features when you request them.</li>
+                    <li>Maintain and improve the reliability of ClipNote.</li>
+                </ul>
+
+                <p>
+                    We do not use your information for purposes unrelated
+                    to providing or improving the service unless we
+                    explain that use and, where required, obtain your
+                    permission.
+                </p>
+
+            </section>
+
+
+            <section id="webpages">
+
+                <h2>4. Webpage Access</h2>
+
+                <p>
+                    ClipNote may access information from a webpage when
+                    you actively use a feature that requires it, such as
+                    creating a clip or annotation.
+                </p>
+
+                <p>
+                    This can include information such as selected text,
+                    the webpage title, and the webpage URL.
+                </p>
+
+                <p>
+                    ClipNote does not intentionally collect your general
+                    browsing history simply because you visit websites.
+                </p>
+
+            </section>
+
+
+            <section id="sharing">
+
+                <h2>5. Data Sharing</h2>
+
+                <p>
+                    ClipNote does not sell your personal information.
+                </p>
+
+                <p>
+                    Information may be processed by service providers
+                    that are necessary to operate specific ClipNote
+                    features, such as authentication, storage, hosting,
+                    or AI functionality.
+                </p>
+
+                <p>
+                    When third-party services are used, information is
+                    shared only as necessary for the relevant feature
+                    and subject to the applicable service's terms and
+                    privacy practices.
+                </p>
+
+            </section>
+
+
+            <section id="security">
+
+                <h2>6. Security</h2>
+
+                <p>
+                    We take reasonable technical and organizational
+                    measures to protect information handled by ClipNote
+                    against unauthorized access, alteration, disclosure,
+                    or destruction.
+                </p>
+
+                <p>
+                    However, no internet-based service can guarantee
+                    absolute security.
+                </p>
+
+            </section>
+
+
+            <section id="choices">
+
+                <h2>7. Your Choices</h2>
+
+                <p>
+                    Depending on the ClipNote features you use, you may
+                    be able to:
+                </p>
+
+                <ul>
+                    <li>Delete notes or annotations you created.</li>
+                    <li>Remove saved clips.</li>
+                    <li>Stop using optional AI features.</li>
+                    <li>Remove or disable the ClipNote extension.</li>
+                    <li>Contact us with questions about your information.</li>
+                </ul>
+
+            </section>
+
+
+            <section id="changes">
+
+                <h2>8. Changes to This Policy</h2>
+
+                <p>
+                    We may update this Privacy Policy when ClipNote's
+                    features, data practices, or legal requirements
+                    change.
+                </p>
+
+                <p>
+                    When we make changes, the updated version will be
+                    published on this page with a new "Last updated"
+                    date.
+                </p>
+
+            </section>
+
+
+            <section id="contact">
+
+                <h2>9. Contact</h2>
+
+                <p>
+                    If you have questions, concerns, or requests about
+                    ClipNote's privacy practices, please contact the
+                    ClipNote team.
+                </p>
+
+                <div class="contact-box">
+
+                    <strong>
+                        Privacy questions?
+                    </strong>
+
+                    <p style="margin-top: 7px;">
+                        Replace the placeholder below with your real
+                        privacy/support email before publishing.
+                    </p>
+
+                    <a href="mailto:careercapital41@gmail.com">
+                        careercapital41@gmail.com
+                    </a>
+
+                    
+                </div>
+
+            </section>
+
+        </div>
+
+    </article>
+
+</div>
+```
+
+</main>
+
+<footer>
+
+```
+<span>
+    © 2026 ClipNote. Built for better notes on the web.
+</span>
+
+<a href="index.html">
+    Back to ClipNote
+</a>
+```
+
+</footer>
 
 </body>
 </html>

@@ -1,63 +1,754 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Marginal — commentary on everything</title>
-<link rel="stylesheet" href="styles.css" />
-<meta name="google-site-verification" content="7qRRkFIPIqKvsPJc9_RIeOw3w_-d6qbxXUV7sJgWmeo" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ClipNoter — Save what matters</title>
+
+  <meta
+    name="description"
+    content="Save anything from the web, add your thoughts, and build your personal knowledge library."
+  />
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  />
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <meta
+    name="google-site-verification"
+    content="7qRRkFIPIqKvsPJc9_RIeOw3w_-d6qbxXUV7sJgWmeo"
+  />
 </head>
+
 <body>
+
+  <!-- Background decoration -->
+  <div class="background-glow glow-one"></div>
+  <div class="background-glow glow-two"></div>
+
+  <!-- NAVBAR -->
   <header class="site-header">
-    <a class="brand" href="index.html"><span class="mark">“</span>clipper</a>
-    <a href="https://chrome.google.com/webstore" target="_blank" rel="noopener" class="btn primary">Get the extension</a>
+    <a class="brand" href="index.html" aria-label="ClipNoter home">
+      <span class="brand-icon">✦</span>
+      <span>Clip<span>Noter</span></span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="#how-it-works">How it works</a>
+      <a href="#feed">Explore</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+
+    <a
+      class="button button-small button-primary"
+      href="https://chromewebstore.google.com/detail/clipnoter-%E2%80%94-clip-comment/coflhhkdefdhkealolkmfpgpkkljlkoi"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Install extension
+    </a>
   </header>
-  <div class="container">
-    <h1 style="font-size:22px;margin-bottom:4px;">Public feed</h1>
-    <p style="color:#777;margin-top:0;">Commentary on the internet, always linked back to its source.</p>
-    <div id="feed"></div>
-  </div>
 
-  <script src="https://esm.sh/@supabase/supabase-js@2" type="module" id="sb-loader"></script>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+
+      <div class="hero-badge">
+        <span class="status-dot"></span>
+        Your ideas deserve more than a bookmark
+      </div>
+
+      <h1>
+        Save what you read.
+        <span>Remember why it matters.</span>
+      </h1>
+
+      <p class="hero-description">
+        Clip anything from the web, add your own thoughts, and build a
+        personal library of ideas worth coming back to.
+      </p>
+
+
+      <!-- URL INPUT -->
+      <div class="url-card">
+
+        <div class="url-card-top">
+          <div>
+            <div class="url-card-title">
+              Start with a webpage
+            </div>
+
+            <div class="url-card-subtitle">
+              Paste a link and turn it into a note.
+            </div>
+          </div>
+
+          <div class="url-icon">
+            🔗
+          </div>
+        </div>
+
+        <form id="urlForm" class="url-form">
+
+          <div class="url-input-wrapper">
+            <span class="input-icon">↗</span>
+
+            <input
+              id="urlInput"
+              type="url"
+              placeholder="https://example.com/article"
+              autocomplete="url"
+              required
+            />
+          </div>
+
+          <button
+            class="button button-primary button-preview"
+            type="submit"
+          >
+            Preview
+            <span>→</span>
+          </button>
+
+        </form>
+
+        <div id="urlError" class="url-error"></div>
+
+      </div>
+
+
+      <div class="hero-divider">
+        <span>or</span>
+      </div>
+
+
+      <!-- EXTENSION CTA -->
+      <a
+        class="extension-card"
+        href="https://chromewebstore.google.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+
+        <div class="extension-icon">
+          ✂
+        </div>
+
+        <div class="extension-copy">
+          <strong>Clip directly from the web</strong>
+
+          <span>
+            Highlight text anywhere and save it with one click.
+          </span>
+        </div>
+
+        <div class="extension-arrow">
+          →
+        </div>
+
+      </a>
+
+    </section>
+
+
+    <!-- PRODUCT DEMO -->
+    <section class="demo-section">
+
+      <div class="section-heading centered">
+        <div class="eyebrow">SEE IT IN ACTION</div>
+
+        <h2>
+          From something you find
+          <span>to something you remember.</span>
+        </h2>
+
+        <p>
+          Clip the important part. Add your perspective.
+          Keep the source attached forever.
+        </p>
+      </div>
+
+
+      <div class="demo-window">
+
+        <div class="demo-browser-bar">
+
+          <div class="browser-dots">
+            <i></i>
+            <i></i>
+            <i></i>
+          </div>
+
+          <div class="browser-address">
+            example.com/article
+          </div>
+
+          <div></div>
+
+        </div>
+
+
+        <div class="demo-content">
+
+          <div class="demo-source">
+            <div class="demo-source-label">
+              EXAMPLE.COM
+            </div>
+
+            <h3>
+              The ideas that change how we think
+            </h3>
+
+            <p>
+              A collection of ideas, discoveries, and perspectives
+              worth keeping.
+            </p>
+          </div>
+
+
+          <div class="demo-note">
+
+            <div class="note-label">
+              <span>✦</span>
+              MY NOTE
+            </div>
+
+            <p>
+              This is the part I want to remember.
+              The interesting thing is how this connects to
+              something I was already learning.
+            </p>
+
+            <div class="note-footer">
+              <span>Saved with ClipNoter</span>
+              <span>✓</span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="how-section">
+
+      <div class="section-heading">
+        <div class="eyebrow">HOW IT WORKS</div>
+
+        <h2>
+          Three steps.
+          <span>One better way to save.</span>
+        </h2>
+      </div>
+
+
+      <div class="steps-grid">
+
+        <article class="step-card">
+
+          <div class="step-number">01</div>
+
+          <div class="step-icon">⌕</div>
+
+          <h3>Find something</h3>
+
+          <p>
+            Discover an article, idea, quote, video, or anything
+            else worth keeping.
+          </p>
+
+        </article>
+
+
+        <article class="step-card featured-step">
+
+          <div class="step-number">02</div>
+
+          <div class="step-icon">✦</div>
+
+          <h3>Clip & think</h3>
+
+          <p>
+            Highlight the important part or paste the webpage
+            and add your own thoughts.
+          </p>
+
+        </article>
+
+
+        <article class="step-card">
+
+          <div class="step-number">03</div>
+
+          <div class="step-icon">◈</div>
+
+          <h3>Keep it forever</h3>
+
+          <p>
+            Your note stays connected to its original source,
+            ready whenever you need it.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- VALUE PROP -->
+    <section class="quote-section">
+
+      <div class="quote-card">
+
+        <div class="quote-mark">“</div>
+
+        <h2>
+          Bookmarks remember
+          <em>where</em> you found something.
+          <span>ClipNoter remembers why.</span>
+        </h2>
+
+        <p>
+          Your thoughts are the part worth keeping.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- PUBLIC FEED -->
+    <section id="feed" class="feed-section">
+
+      <div class="feed-heading">
+
+        <div>
+          <div class="eyebrow">FROM THE COMMUNITY</div>
+
+          <h2>
+            What people are
+            <span>clipping.</span>
+          </h2>
+        </div>
+
+        <div class="feed-live">
+          <span></span>
+          Live feed
+        </div>
+
+      </div>
+
+      <div id="feedGrid" class="feed-grid">
+        <div class="loading-card">
+          <div class="loading-spinner"></div>
+          Loading clips...
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- FINAL CTA -->
+    <section class="final-cta">
+
+      <div class="final-cta-glow"></div>
+
+      <div class="final-cta-content">
+
+        <div class="eyebrow light-eyebrow">
+          START BUILDING YOUR LIBRARY
+        </div>
+
+        <h2>
+          Stop bookmarking.
+          <span>Start remembering.</span>
+        </h2>
+
+        <p>
+          Save the things that matter and add your own perspective.
+        </p>
+
+        <div class="final-buttons">
+
+          <a
+            href="https://chromewebstore.google.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button button-light"
+          >
+            Install ClipNoter
+            <span>→</span>
+          </a>
+
+          <a
+            href="#urlForm"
+            class="button button-outline-light"
+          >
+            Paste a link
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+
+    <div class="footer-brand">
+      <span class="brand-icon">✦</span>
+      ClipNoter
+    </div>
+
+    <div class="footer-links">
+      <a href="privacy.html">Privacy</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#feed">Explore</a>
+    </div>
+
+    <div class="footer-copy">
+      Built for people who like to remember things.
+    </div>
+
+  </footer>
+
+
+  <!-- SUPABASE -->
   <script src="config.js"></script>
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-    const cfg = window.MARGINAL_CONFIG;
-    const supabase = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
 
-    function escapeHtml(str) {
-      return (str || "").replace(/[&<>"']/g, (c) => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-      }[c]));
+  <script type="module">
+
+    import { createClient }
+      from "https://esm.sh/@supabase/supabase-js@2";
+
+    const cfg = window.MARGINAL_CONFIG;
+
+    const supabase = createClient(
+      cfg.SUPABASE_URL,
+      cfg.SUPABASE_ANON_KEY
+    );
+
+
+    /* ------------------------------
+       SECURITY
+    ------------------------------ */
+
+    function escapeHtml(value) {
+
+      return (value || "").replace(
+        /[&<>"']/g,
+        (character) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        }[character])
+      );
+
     }
-    function initials(name) { return (name || "?").trim().slice(0, 2).toUpperCase(); }
+
+
+    /* ------------------------------
+       AVATAR
+    ------------------------------ */
+
+    function initials(name) {
+
+      return (name || "?")
+        .trim()
+        .slice(0, 2)
+        .toUpperCase();
+
+    }
+
+
+    /* ------------------------------
+       URL PREVIEW
+    ------------------------------ */
+
+    const urlForm =
+      document.getElementById("urlForm");
+
+    const urlInput =
+      document.getElementById("urlInput");
+
+    const urlError =
+      document.getElementById("urlError");
+
+
+    urlForm.addEventListener("submit", (event) => {
+
+      event.preventDefault();
+
+      const value = urlInput.value.trim();
+
+      if (!value) {
+        urlError.textContent =
+          "Paste a webpage URL first.";
+        return;
+      }
+
+
+      let parsedUrl;
+
+      try {
+
+        parsedUrl = new URL(value);
+
+      } catch {
+
+        urlError.textContent =
+          "That doesn't look like a valid URL.";
+
+        return;
+      }
+
+
+      if (
+        parsedUrl.protocol !== "http:" &&
+        parsedUrl.protocol !== "https:"
+      ) {
+
+        urlError.textContent =
+          "Please use a normal http:// or https:// webpage.";
+
+        return;
+      }
+
+
+      urlError.textContent = "";
+
+
+      /*
+       * Save the URL temporarily so clip.html can
+       * use it when the user arrives there.
+       */
+
+      sessionStorage.setItem(
+        "clipnoter_pending_url",
+        parsedUrl.href
+      );
+
+
+      window.location.href =
+        "clip.html?url=" +
+        encodeURIComponent(parsedUrl.href);
+
+    });
+
+
+    /* ------------------------------
+       PUBLIC FEED
+    ------------------------------ */
 
     async function loadFeed() {
-      const feedEl = document.getElementById("feed");
-      const { data, error } = await supabase.from("clips_feed").select("*").limit(50);
+
+      const feedEl =
+        document.getElementById("feedGrid");
+
+
+      const {
+        data,
+        error
+      } = await supabase
+        .from("clips_feed")
+        .select("*")
+        .limit(50);
+
+
       if (error) {
-        feedEl.innerHTML = `<p class="empty">Couldn't load the feed: ${escapeHtml(error.message)}</p>`;
-        return;
-      }
-      if (!data || data.length === 0) {
-        feedEl.innerHTML = `<p class="empty">No clips published yet. Be the first with the Marginal extension.</p>`;
-        return;
-      }
-      feedEl.innerHTML = data.map((c) => `
-        <a class="feed-item" href="clip.html?slug=${encodeURIComponent(c.slug)}">
-          <div class="card">
-            <div class="author-row">
-              <span class="avatar">${initials(c.author_display_name || c.author_username)}</span>
-              ${escapeHtml(c.author_display_name || c.author_username)}
-            </div>
-            <blockquote class="quote" style="font-size:16px;">"${escapeHtml(c.quoted_text.slice(0, 220))}${c.quoted_text.length > 220 ? "…" : ""}"</blockquote>
-            ${c.commentary ? `<div class="commentary" style="font-size:14px;">${escapeHtml(c.commentary.slice(0, 180))}</div>` : ""}
-            <div class="meta">from ${escapeHtml(c.source_domain || "")} · ${new Date(c.created_at).toLocaleDateString()}</div>
+
+        feedEl.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">!</div>
+            <h3>Couldn't load the feed</h3>
+            <p>
+              ${escapeHtml(error.message)}
+            </p>
           </div>
-        </a>
-      `).join("");
+        `;
+
+        return;
+
+      }
+
+
+      if (!data || data.length === 0) {
+
+        feedEl.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">✦</div>
+
+            <h3>No clips yet</h3>
+
+            <p>
+              Be the first person to share something worth remembering.
+            </p>
+
+            <a
+              href="#urlForm"
+              class="button button-primary"
+            >
+              Create your first clip →
+            </a>
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      feedEl.innerHTML = data.map((clip) => {
+
+        const name =
+          clip.author_display_name ||
+          clip.author_username ||
+          "Anonymous";
+
+
+        const quotedText =
+          clip.quoted_text || "";
+
+
+        const commentary =
+          clip.commentary || "";
+
+
+        return `
+
+          <a
+            class="feed-item"
+            href="clip.html?slug=${encodeURIComponent(clip.slug)}"
+          >
+
+            <article class="feed-card">
+
+              <div class="feed-card-top">
+
+                <div class="feed-author">
+
+                  <span class="avatar">
+                    ${initials(name)}
+                  </span>
+
+                  <div>
+
+                    <strong>
+                      ${escapeHtml(name)}
+                    </strong>
+
+                    <span>
+                      ${new Date(
+                        clip.created_at
+                      ).toLocaleDateString()}
+                    </span>
+
+                  </div>
+
+                </div>
+
+                <span class="card-arrow">
+                  ↗
+                </span>
+
+              </div>
+
+
+              <div class="feed-source">
+
+                <span class="source-dot"></span>
+
+                ${escapeHtml(
+                  clip.source_domain || "Web"
+                )}
+
+              </div>
+
+
+              ${
+                quotedText
+                  ? `
+                    <blockquote class="feed-quote">
+                      “${escapeHtml(
+                        quotedText.slice(0, 240)
+                      )}${
+                        quotedText.length > 240
+                          ? "…"
+                          : ""
+                      }”
+                    </blockquote>
+                  `
+                  : ""
+              }
+
+
+              ${
+                commentary
+                  ? `
+                    <p class="feed-commentary">
+                      ${escapeHtml(
+                        commentary.slice(0, 220)
+                      )}${
+                        commentary.length > 220
+                          ? "…"
+                          : ""
+                      }
+                    </p>
+                  `
+                  : ""
+              }
+
+
+              <div class="feed-card-footer">
+
+                <span>
+                  Read source
+                </span>
+
+                <span>→</span>
+
+              </div>
+
+            </article>
+
+          </a>
+
+        `;
+
+      }).join("");
+
     }
+
+
     loadFeed();
+
   </script>
+
 </body>
 </html>
