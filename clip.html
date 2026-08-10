@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Marginal clip</title>
-<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="clip.css" />
 <meta name="google-site-verification" content="7qRRkFIPIqKvsPJc9_RIeOw3w_-d6qbxXUV7sJgWmeo" />
 </head>
 <body>
@@ -32,120 +32,46 @@
   </dialog>
 
   <script src="config.js"></script>
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-    const cfg = window.MARGINAL_CONFIG;
-    const supabase = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
-
-    const params = new URLSearchParams(location.search);
-    const slug = params.get("slug");
-    const container = document.getElementById("container");
-
-    function escapeHtml(str) {
-      return (str || "").replace(/[&<>"']/g, (c) => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-      }[c]));
-    }
-    function initials(name) { return (name || "?").trim().slice(0, 2).toUpperCase(); }
-
-    let currentClip = null;
-
-    async function loadClip() {
-      if (!slug) {
-        container.innerHTML = `<p class="empty">No clip specified.</p>`;
-        return;
-      }
-      const { data, error } = await supabase.from("clips_feed").select("*").eq("slug", slug).single();
-      if (error || !data) {
-        container.innerHTML = `<p class="empty">This clip doesn't exist or was removed.</p>`;
-        return;
-      }
-      currentClip = data;
-      const claimBanner = data.claim_status === "filed"
-        ? `<div class="claim-banner">⚠️ A rights claim has been filed on this clip. It is under review.</div>` : "";
-
-      container.innerHTML = `
-        <div class="card">
-          <div class="author-row">
-            <span class="avatar">${initials(data.author_display_name || data.author_username)}</span>
-            ${escapeHtml(data.author_display_name || data.author_username)} · @${escapeHtml(data.author_username)}
-          </div>
-          ${claimBanner}
-          <blockquote class="quote">"${escapeHtml(data.quoted_text)}"</blockquote>
-          ${data.commentary ? `<div class="commentary">${escapeHtml(data.commentary)}</div>` : ""}
-          <div class="source-box">
-            <span>Source: ${escapeHtml(data.source_domain || "")}</span>
-            <a href="${escapeHtml(data.source_url)}" target="_blank" rel="noopener">View original ↗</a>
-          </div>
-          <div class="meta">Published ${new Date(data.created_at).toLocaleString()}</div>
-          <button class="btn claim" id="open-claim">🚩 File a claim</button>
-        </div>
-
-        <div class="comments-section">
-          <h3 style="font-size:15px;">Comments</h3>
-          <div id="comments-list"></div>
-        </div>
-      `;
-
-      document.getElementById("open-claim").addEventListener("click", () => {
-        document.getElementById("claim-dialog").showModal();
-      });
-
-      loadComments();
-    }
-
-    async function loadComments() {
-      const { data, error } = await supabase
-        .from("comments")
-        .select("body, created_at, profiles(username, display_name)")
-        .eq("clip_id", currentClip.id)
-        .order("created_at", { ascending: true });
-      const listEl = document.getElementById("comments-list");
-      if (error) {
-        listEl.innerHTML = `<p class="empty">Couldn't load comments.</p>`;
-        return;
-      }
-      if (!data || data.length === 0) {
-        listEl.innerHTML = `<p class="empty">No comments yet.</p>`;
-        return;
-      }
-      listEl.innerHTML = data.map((c) => `
-        <div class="comment">
-          <span class="who">${escapeHtml(c.profiles?.display_name || c.profiles?.username || "someone")}</span>
-          ${escapeHtml(c.body)}
-        </div>
-      `).join("");
-    }
-
-    document.getElementById("claim-cancel").addEventListener("click", () => {
-      document.getElementById("claim-dialog").close();
-    });
-
-    document.getElementById("claim-submit").addEventListener("click", async () => {
-      const name = document.getElementById("claim-name").value.trim();
-      const email = document.getElementById("claim-email").value.trim();
-      const reason = document.getElementById("claim-reason").value.trim();
-      const errEl = document.getElementById("claim-error");
-      errEl.style.display = "none";
-      if (!name || !email || !reason) {
-        errEl.textContent = "Please fill in every field.";
-        errEl.style.display = "block";
-        return;
-      }
-      const { error } = await supabase.from("claims").insert({
-        clip_id: currentClip.id, claimant_name: name, claimant_email: email, reason
-      });
-      if (error) {
-        errEl.textContent = error.message;
-        errEl.style.display = "block";
-        return;
-      }
-      document.getElementById("claim-dialog").close();
-      alert("Claim submitted. The clip owner and moderators have been notified.");
-      loadClip();
-    });
-
-    loadClip();
+  <script src="clip.js">
   </script>
 </body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ClipNoter clip</title>
+<link rel="stylesheet" href="clip.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span class="mark">“</span>ClipNoter</a>
+    <a href="index.html" class="btn primary">Browse feed</a>
+  </header>
+  <div class="container" id="container">
+    <p class="empty">Loading…</p>
+  </div>
+
+  <dialog id="claim-dialog" class="claim-dialog">
+    <div class="dialog-inner">
+      <h3>File a claim</h3>
+      <p style="color:#777;font-size:13px;">If you're the original creator or rights holder and believe this clip should be reviewed or removed, tell us below.</p>
+      <div class="field"><label>Your name</label><input id="claim-name" type="text" /></div>
+      <div class="field"><label>Email</label><input id="claim-email" type="email" /></div>
+      <div class="field"><label>Reason</label><textarea id="claim-reason" rows="4" placeholder="Explain the issue…"></textarea></div>
+      <p id="claim-error" class="empty" style="display:none;color:#dc2626;padding:0;"></p>
+      <div class="dialog-actions">
+        <button class="btn" id="claim-cancel">Cancel</button>
+        <button class="btn primary" id="claim-submit">Submit claim</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="config.js"></script>
+  <script type="module" src="clip.js"></script>
+</body>
 </html>
+
