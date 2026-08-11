@@ -502,6 +502,13 @@ color: var(--muted);
     transform: rotate(-2deg);
 }
 
+.hero-clip--4 {
+    bottom: -10px;
+    right: 6%;
+    opacity: .55;
+    transform: rotate(2deg);
+}
+
 .hero-content {
 
 

@@ -98,7 +98,16 @@
             </div>
             <p>Missed the second-order effects.</p>
         </div>
-
+<div class="hero-clip hero-clip--4">
+            <div class="hero-clip-row">
+                <span class="hero-clip-avatar">E</span>
+                <div>
+                    <strong>@elena</strong>
+                    <span>theatlantic.com</span>
+                </div>
+            </div>
+            <p>This misses the historical context.</p>
+        </div>
     </div>
     <div class="hero-content">
 
@@ -616,7 +625,65 @@ async function loadFeed() {
 loadFeed();
 
 </script>
+<script>
+(() => {
+    "use strict";
 
+    // Gentle floating drift for the decorative .hero-clips cards.
+    // Skipped entirely for prefers-reduced-motion - this is pure
+    // decoration (already aria-hidden), so it has no business moving
+    // for anyone who's asked their OS not to animate things.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+    }
+
+    const cards = Array.from(
+        document.querySelectorAll(".hero-clips .hero-clip")
+    );
+
+    if (cards.length === 0) {
+        return;
+    }
+
+    const drifters = cards.map((el, index) => {
+        // Read the rotation each card already gets from its
+        // .hero-clip--N CSS rule, instead of duplicating those degree
+        // values here - decompose the computed transform matrix back
+        // into an angle.
+        const matrix = window.getComputedStyle(el).transform;
+        let baseRotateDeg = 0;
+        const match = matrix.match(/matrix\(([^)]+)\)/);
+        if (match) {
+            const [a, b] = match[1].split(",").map(Number);
+            baseRotateDeg = Math.atan2(b, a) * (180 / Math.PI);
+        }
+
+        return {
+            el,
+            baseRotateDeg,
+            amplitudeX: 6 + (index % 3) * 2,
+            amplitudeY: 8 + (index % 2) * 3,
+            speed: 0.00028 + index * 0.00006,
+            phase: index * 1.7
+        };
+    });
+
+    function tick(timestamp) {
+        for (const drifter of drifters) {
+            const t = timestamp * drifter.speed + drifter.phase;
+            const dx = Math.sin(t) * drifter.amplitudeX;
+            const dy = Math.cos(t * 0.8) * drifter.amplitudeY;
+
+            drifter.el.style.transform =
+                `rotate(${drifter.baseRotateDeg.toFixed(2)}deg) translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
+        }
+
+        requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+})();
+</script>
 </body>
 
 </html>
