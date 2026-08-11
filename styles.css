@@ -360,6 +360,148 @@ gap: 70px;
 
 }
 
+.hero {
+
+
+position: relative;
+
+
+}
+
+.hero-clips {
+
+
+position: absolute;
+inset: 0;
+
+z-index: 0;
+
+overflow: hidden;
+
+pointer-events: none;
+
+
+}
+
+.hero-clip {
+
+
+position: absolute;
+
+width: clamp(150px, 18vw, 190px);
+
+padding: 12px 14px;
+
+border: 1px solid rgba(255, 255, 255, .08);
+border-radius: 13px;
+
+background: var(--surface);
+backdrop-filter: blur(6px);
+
+font-size: 11px;
+line-height: 1.4;
+
+
+}
+
+.hero-clip-row {
+
+
+display: flex;
+align-items: center;
+
+gap: 8px;
+
+margin-bottom: 6px;
+
+
+}
+
+.hero-clip-avatar {
+
+
+width: 22px;
+height: 22px;
+
+flex-shrink: 0;
+
+display: grid;
+place-items: center;
+
+border-radius: 50%;
+
+background:
+    linear-gradient(
+        135deg,
+        var(--accent),
+        var(--accent-2)
+    );
+
+color: var(--bg);
+
+font-size: 10px;
+font-weight: 800;
+
+
+}
+
+.hero-clip-row strong {
+
+
+display: block;
+
+font-size: 11px;
+
+
+}
+
+.hero-clip-row span {
+
+
+color: var(--muted);
+
+font-size: 10px;
+
+
+}
+
+.hero-clip p {
+
+
+margin: 0;
+
+color: var(--muted);
+
+
+}
+
+/* Positioned in the layout's actual empty margins (top-left corner,
+   above the browser mockup on the right, bottom-left below the trust
+   row) rather than scattered through the text column - the hero here
+   is a denser two-column layout than a wide-open single-column one,
+   so there's much less true empty space to work with. */
+
+.hero-clip--1 {
+    top: -34px;
+    left: -24px;
+    opacity: .75;
+    transform: rotate(-4deg);
+}
+
+.hero-clip--2 {
+    top: 0;
+    right: 4%;
+    opacity: .5;
+    transform: rotate(3deg);
+}
+
+.hero-clip--3 {
+    bottom: 2%;
+    left: 0;
+    opacity: .5;
+    transform: rotate(-2deg);
+}
+
 .hero-content {
 
 
@@ -1765,6 +1907,12 @@ RESPONSIVE
         50px;
 }
 
+
+.hero-clips {
+
+    display: none;
+
+}
 
 .hero-preview {
 
