@@ -1140,7 +1140,7 @@ loadFeed();
 
     <div class="container">
 
-        <div class="section-intro">
+        <div class="section-intro reveal">
 
             <div class="eyebrow">
                 HOW IT WORKS
@@ -1163,7 +1163,7 @@ loadFeed();
         <div class="steps-grid">
 
 
-            <article class="step-card">
+            <article class="step-card reveal">
 
                 <div class="step-number">
                     01
@@ -1188,7 +1188,7 @@ loadFeed();
             </article>
 
 
-            <article class="step-card">
+            <article class="step-card reveal">
 
                 <div class="step-number">
                     02
@@ -1213,7 +1213,7 @@ loadFeed();
             </article>
 
 
-            <article class="step-card">
+            <article class="step-card reveal">
 
                 <div class="step-number">
                     03
@@ -1253,7 +1253,7 @@ loadFeed();
 
     <div class="container">
 
-        <div class="section-intro centered">
+        <div class="section-intro centered reveal">
 
             <div class="eyebrow">
                 FEATURES
@@ -1278,7 +1278,7 @@ loadFeed();
 
             <!-- TEXT CLIPPING -->
 
-            <article class="feature-card feature-large">
+            <article class="feature-card feature-large reveal">
 
                 <div class="feature-content">
 
@@ -1364,7 +1364,7 @@ loadFeed();
 
             <!-- VIDEO RECORDING -->
 
-            <article class="feature-card feature-large dark-card">
+            <article class="feature-card feature-large dark-card" reveal>
 
                 <div class="feature-content">
 
@@ -1449,7 +1449,7 @@ loadFeed();
 
             <!-- SEARCH -->
 
-            <article class="feature-card">
+            <article class="feature-card reveal">
 
                 <div class="feature-icon">
                     ⌕
@@ -1509,7 +1509,7 @@ loadFeed();
 
             <!-- ORGANIZE -->
 
-            <article class="feature-card">
+            <article class="feature-card reveal">
 
                 <div class="feature-icon">
                     ◈
@@ -1546,7 +1546,7 @@ loadFeed();
 
             <!-- EXPORT -->
 
-            <article class="feature-card feature-wide">
+            <article class="feature-card feature-wide reveal">
 
                 <div class="feature-content">
 
@@ -1648,7 +1648,7 @@ loadFeed();
 
             <div class="value-list">
 
-                <div class="value-item">
+                <div class="value-item reveal">
 
                     <span>01</span>
 
@@ -1666,7 +1666,7 @@ loadFeed();
                 </div>
 
 
-                <div class="value-item">
+                <div class="value-item reveal">
 
                     <span>02</span>
 
@@ -1684,7 +1684,7 @@ loadFeed();
                 </div>
 
 
-                <div class="value-item">
+                <div class="value-item reveal">
 
                     <span>03</span>
 
@@ -1752,7 +1752,7 @@ loadFeed();
 
         <div
             id="feed"
-            class="feed-grid"
+            class="feed-grid reveal"
         >
 
             <div class="loading-card">
@@ -1905,7 +1905,7 @@ loadFeed();
 
     <div class="container">
 
-        <div class="cta-card">
+        <div class="cta-card reveal">
 
             <div class="cta-light"></div>
 
@@ -1966,7 +1966,7 @@ loadFeed();
         <div class="footer-main">
 
 
-            <div class="footer-brand">
+            <div class="footer-brand reveal">
 
                 <a
                     href="index.html"
@@ -2350,7 +2350,49 @@ if (
 }
 
 </script>
+<script>
+(() => {
+    "use strict";
 
+    const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const revealEls = Array.from(document.querySelectorAll(".reveal"));
+
+    if (prefersReducedMotion) {
+        revealEls.forEach((el) => el.classList.add("is-visible"));
+    } else if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-visible");
+                        observer.unobserve(entry.target);
+                    }
+                }
+            },
+            {
+                threshold: 0.15,
+                rootMargin: "0px 0px -40px 0px"
+            }
+        );
+
+        revealEls.forEach((el) => observer.observe(el));
+    } else {
+        revealEls.forEach((el) => el.classList.add("is-visible"));
+    }
+
+    const header = document.querySelector(".site-header");
+    if (header) {
+        const updateHeaderState = () => {
+            header.classList.toggle("scrolled", window.scrollY > 10);
+        };
+        updateHeaderState();
+        window.addEventListener("scroll", updateHeaderState, { passive: true });
+    }
+})();
+</script>
 
 </body>
 </html>
