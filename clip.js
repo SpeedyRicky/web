@@ -124,7 +124,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const cfg = window.CLIPPER_CONFIG;
+const cfg = window.MARGINAL_CONFIG;
 const supabase = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
 
 const params = new URLSearchParams(location.search);

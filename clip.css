@@ -1,4 +1,4 @@
-* { box-sizing: border-box; }
+/* * { box-sizing: border-box; }
 body {
   margin: 0; font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #111; background: #f6f6f7;
@@ -49,4 +49,231 @@ dialog.claim-dialog::backdrop { background: rgba(0,0,0,.4); }
 .dialog-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
 
 .feed-item { display: block; text-decoration: none; color: inherit; }
-.empty { text-align: center; color: #888; padding: 60px 0; }
+.empty { text-align: center; color: #888; padding: 60px 0; } */
+
+/* Clip landing page - structural/page-specific rules only. Shared
+   header/footer/button/typography styles come from styles.css, loaded
+   before this file, so this only needs to define what's unique to a
+   single clip page: the card, the claim dialog, comments. Every class
+   name here matches what clip.js targets - restyled, not renamed. */
+
+main {
+    width: min(calc(100% - 40px), 680px);
+    margin: 0 auto;
+    padding: 48px 0 90px;
+}
+
+.card {
+    padding: 24px 26px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025));
+    border: 1px solid var(--border);
+    border-radius: 19px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    margin-bottom: 20px;
+}
+
+.author-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    color: var(--text);
+    font-weight: 800;
+    font-size: 13.5px;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    margin-right: -200px;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: var(--bg);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+blockquote.quote {
+    margin: 0 0 18px;
+    padding-left: 16px;
+    border-left: 3px solid var(--accent);
+    color: var(--text);
+    font-size: 20px;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.commentary {
+    margin-bottom: 18px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+}
+
+.source-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 14px;
+}
+
+.source-box a {
+    color: var(--accent-2);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.source-box a:hover {
+    text-decoration: underline;
+}
+
+.meta {
+    margin-bottom: 16px;
+    color: var(--subtle);
+    font-size: 12.5px;
+}
+
+.claim-banner {
+    padding: 11px 15px;
+    background: rgba(240, 192, 105, 0.1);
+    border: 1px solid rgba(240, 192, 105, 0.28);
+    border-radius: 12px;
+    color: #f0c069;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.btn.claim {
+    background: rgba(240, 192, 105, 0.08);
+    color: #f0c069;
+    border: 1px solid rgba(240, 192, 105, 0.3);
+}
+
+.btn.claim:hover {
+    background: rgba(240, 192, 105, 0.14);
+}
+
+.comments-section {
+    margin-top: 28px;
+}
+
+.comments-section h3 {
+    margin: 0 0 14px;
+    color: var(--text);
+    font-size: 15px;
+}
+
+.comment {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13.5px;
+}
+
+.comment .who {
+    margin-right: 6px;
+    color: var(--text);
+    font-weight: 800;
+}
+
+/* Claim dialog */
+
+dialog.claim-dialog {
+    padding: 0;
+    width: 92%;
+    max-width: 420px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: #101422;
+    color: var(--text);
+}
+
+dialog.claim-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.dialog-inner {
+    padding: 22px;
+}
+
+.dialog-inner h3 {
+    margin-top: 0;
+    color: var(--text);
+}
+
+.dialog-subtext {
+    margin-bottom: 16px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.field {
+    margin-bottom: 14px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.field input,
+.field textarea {
+    width: 100%;
+    padding: 9px 11px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font: inherit;
+}
+
+.field input:focus,
+.field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.claim-error {
+    padding: 0 !important;
+    color: #ff8080 !important;
+    text-align: left !important;
+}
+
+.dialog-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.feed-item {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+.empty {
+    padding: 60px 0;
+    color: var(--muted);
+    text-align: center;
+}
