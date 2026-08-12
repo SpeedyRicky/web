@@ -1,2399 +1,681 @@
-<!-- <!DOCTYPE html>
-
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-<title>ClipNoter — Save the web. Add your thoughts.</title>
-
-<meta
-    name="description"
-    content="ClipNoter lets you save, annotate, and revisit the best parts of the web."
->
-
-<meta name="theme-color" content="#080a0f">
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClipNoter — Capture what matters, keep the source</title>
+<meta name="description" content="ClipNoter saves the exact passage, or the exact moment of a video, and wires it straight back to where you found it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,500&family=Fraunces:ital,wght@0,500;0,600;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-
-<meta
-    name="google-site-verification"
-    content="7qRRkFIPIqKvsPJc9_RIeOw3w_-d6qbxXUV7sJgWmeo"
->
-
-
 </head>
-
 <body>
 
-<header class="site-header">
+<canvas id="cn-bg3d" aria-hidden="true"></canvas>
 
-
-<div class="header-inner">
-
-    <a class="brand" href="index.html" aria-label="ClipNoter home">
-        <span class="brand-icon">“</span>
-        <span>ClipNoter</span>
-    </a>
-
-    <nav class="nav-links" aria-label="Main navigation">
-        <a href="#feed">Explore</a>
-        <a href="privacy.html">Privacy</a>
-
-        <a
-            href="https://chromewebstore.google.com/detail/ClipNoterr-%E2%80%94-clip-comment/coflhhkdefdhkealolkmfpgpkkljlkoi"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn primary"
-        >
-            Get ClipNoter
-        </a>
-    </nav>
-
+<div id="cn-floattext" aria-hidden="true">
+  <span style="top:10%; left:7%; font-family:var(--font-display); font-style:italic; font-size:22px; animation-duration:26s; animation-delay:-4s; --float-dx:10px; --float-dy:-22px; --float-rot:-3deg;">keep the source</span>
+  <span style="top:20%; left:80%; font-family:var(--font-mono); font-size:13px; animation-duration:31s; animation-delay:-11s; --float-dx:-12px; --float-dy:18px; --float-rot:2deg;">0:18:42</span>
+  <span style="top:36%; left:60%; font-family:var(--font-display); font-style:italic; font-size:28px; animation-duration:23s; animation-delay:-6s; --float-dx:16px; --float-dy:-14px; --float-rot:-1.5deg;">annotate</span>
+  <span style="top:50%; left:12%; font-family:var(--font-mono); font-size:14px; animation-duration:29s; animation-delay:-16s; --float-dx:-10px; --float-dy:-20px; --float-rot:3deg;">#research</span>
+  <span style="top:63%; left:70%; font-family:var(--font-display); font-style:italic; font-size:20px; animation-duration:34s; animation-delay:-9s; --float-dx:12px; --float-dy:16px; --float-rot:-2deg;">the exact wording</span>
+  <span style="top:74%; left:30%; font-family:var(--font-mono); font-size:13px; animation-duration:27s; animation-delay:-2s; --float-dx:-14px; --float-dy:-16px; --float-rot:2.5deg;">source lock</span>
+  <span style="top:85%; left:52%; font-family:var(--font-display); font-style:italic; font-size:24px; animation-duration:24s; animation-delay:-13s; --float-dx:10px; --float-dy:-18px; --float-rot:-2.5deg;">archived</span>
+  <span style="top:6%; left:48%; font-family:var(--font-mono); font-size:12px; animation-duration:32s; animation-delay:-20s; --float-dx:-8px; --float-dy:20px; --float-rot:1.5deg;">youtube.com</span>
+  <span style="top:44%; left:88%; font-family:var(--font-display); font-style:italic; font-size:20px; animation-duration:22s; animation-delay:-8s; --float-dx:-16px; --float-dy:-14px; --float-rot:3deg;">retrieve</span>
+  <span style="top:93%; left:9%; font-family:var(--font-mono); font-size:12px; animation-duration:28s; animation-delay:-18s; --float-dx:14px; --float-dy:-12px; --float-rot:-2deg;">wired back to the source</span>
 </div>
 
+<div id="cn-cursor-glow" aria-hidden="true"></div>
 
+<div class="reveal-page">
+
+<div class="progress-rail" aria-hidden="true"><span id="progress-fill"></span></div>
+
+<header>
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark">C</span>
+      <span class="brand-name">ClipNoter</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#sequence">How it works</a>
+      <a href="#systems">Features</a>
+      <a href="#platforms">Platforms</a>
+      <a href="#faq">FAQ</a>
+      <a href="#log">Activity</a>
+    </nav>
+    <div class="theme-toggle" id="theme-toggle" role="group" aria-label="Theme">
+      <button type="button" class="theme-btn" data-theme-choice="light">Light</button>
+      <button type="button" class="theme-btn" data-theme-choice="dark">Dark</button>
+      <button type="button" class="theme-btn" data-theme-choice="auto" aria-pressed="true">Auto</button>
+    </div>
+  </div>
 </header>
 
-<main>
-
--->
-<!-- HERO -->
-
-<!-- <section class="hero">
-     Decorative only - the real content is .hero-content/.hero-preview -->
-    <!-- <div class="hero-clips" aria-hidden="true">
-
-        <div class="hero-clip hero-clip--1">
-            <div class="hero-clip-row">
-                <span class="hero-clip-avatar">M</span>
-                <div>
-                    <strong>@marcus</strong>
-                    <span>producthunt.com</span>
-                </div>
-            </div>
-            <p>This changes the whole onboarding flow.</p>
-        </div>
-
-        <div class="hero-clip hero-clip--2">
-            <div class="hero-clip-row">
-                <span class="hero-clip-avatar">J</span>
-                <div>
-                    <strong>@jamie</strong>
-                    <span>nytimes.com</span>
-                </div>
-            </div>
-            <p>The framing here undersells the risk.</p>
-        </div>
-
-        <div class="hero-clip hero-clip--3">
-            <div class="hero-clip-row">
-                <span class="hero-clip-avatar">P</span>
-                <div>
-                    <strong>@priya</strong>
-                    <span>wsj.com</span>
-                </div>
-            </div>
-            <p>Missed the second-order effects.</p>
-        </div>
-<div class="hero-clip hero-clip--4">
-            <div class="hero-clip-row">
-                <span class="hero-clip-avatar">E</span>
-                <div>
-                    <strong>@elena</strong>
-                    <span>theatlantic.com</span>
-                </div>
-            </div>
-            <p>This misses the historical context.</p>
-        </div>
-    </div>
-    <div class="hero-content">
-
-        <div class="eyebrow">
-            <span class="eyebrow-dot"></span>
-            Your thoughts. Connected to the web.
-        </div>
-
-        <h1>
-            Save the web.
-            <span>Add your thoughts.</span>
-        </h1>
-
-        <p class="hero-description">
-            ClipNoter makes it easy to capture the parts of the internet
-            that matter to you, add context, and come back to them later.
-        </p>
-
-        <div class="hero-actions">
-
-            <a
-                href="https://chromewebstore.google.com/detail/ClipNoterr-%E2%80%94-clip-comment/coflhhkdefdhkealolkmfpgpkkljlkoi"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn primary large"
-            >
-                Get the extension
-                <span>→</span>
-            </a>
-
-            <a href="#feed" class="btn secondary large">
-                Explore clips
-            </a>
-
-        </div>
-
-        <div class="hero-trust">
-
-            <div>
-                <span class="trust-icon">✦</span>
-                Save anything
-            </div>
-
-            <div>
-                <span class="trust-icon">✎</span>
-                Add your perspective
-            </div>
-
-            <div>
-                <span class="trust-icon">↗</span>
-                Keep the source
-            </div>
-
-        </div>
-
+<section class="intro" id="top">
+  <div class="wrap intro-grid">
+    <div>
+      <span class="eyebrow">Web capture, kept honest</span>
+      <h1 class="display">Capture what matters. <em>Keep the source.</em></h1>
+      <p class="lede">ClipNoter saves the exact passage, or the exact moment of a video, and wires it straight back to where you found it.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/clipnoter-%E2%80%94-clip-comment/coflhhkdefdhkealolkmfpgpkkljlkoi" target="_blank" rel="noopener">Get the extension</a>
+        <a class="btn btn-ghost" href="#log">Browse recent activity →</a>
+      </div>
     </div>
 
-     PRODUCT PREVIEW 
-
-    <div class="hero-preview">
-
-        <div class="browser-window">
-
-            <div class="browser-top">
-
-                <div class="window-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-
-                <div class="browser-url">
-                    ClipNoterr.netlify.app
-                </div>
-
-                <div class="browser-spacer"></div>
-
-            </div>
-
-            <div class="preview-content">
-
-                <div class="preview-label">
-                    CLIP
-                </div>
-
-                <blockquote>
-                    “The best ideas deserve
-                    more than a bookmark.”
-                </blockquote>
-
-                <div class="preview-note">
-                    <div class="preview-avatar">C</div>
-
-                    <div>
-                        <strong>Your note</strong>
-
-                        <p>
-                            This is the part I want to remember.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="preview-source">
-                    <span>↗</span>
-                    example.com
-                </div>
-
-            </div>
-
+    <div class="clip-card">
+      <div class="clip-card-bar">
+        <span>CLIP 0417</span>
+        <span>SAVED</span>
+      </div>
+      <div class="clip-card-body">
+        <div class="clip-card-row">
+          <span>ELAPSED</span>
+          <b>0:18:42 – 0:24:17</b>
         </div>
-
+        <p class="clip-quote">"This explains the main idea more clearly than anything else in the video."</p>
+        <div class="clip-source">
+          <span>youtube.com/watch</span>
+          <span>Watch clip ↗</span>
+        </div>
+      </div>
     </div>
-
+  </div>
 </section>
 
-
-FEATURES 
-
-<section class="features">
-
-    <div class="section-heading">
-
-        <span class="section-kicker">
-            MADE FOR THE WAY YOU THINK
-        </span>
-
-        <h2>
-            More than a bookmark.
-        </h2>
-
-        <p>
-            Turn random things you find online into information
-            you can actually use later.
-        </p>
-
+<section class="section" id="sequence">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="display">How it works</h2>
+      <p>Three steps, in order, every time you clip something.</p>
     </div>
-
-
-    <div class="feature-grid">
-
-        <article class="feature-card">
-
-            <div class="feature-icon">✦</div>
-
-            <h3>Clip what matters</h3>
-
-            <p>
-                Save the exact text, idea, quote, or section
-                that caught your attention.
-            </p>
-
-        </article>
-
-
-        <article class="feature-card">
-
-            <div class="feature-icon">✎</div>
-
-            <h3>Add your perspective</h3>
-
-            <p>
-                A bookmark tells you where something was.
-                A note tells you why it mattered.
-            </p>
-
-        </article>
-
-
-        <article class="feature-card">
-
-            <div class="feature-icon">↗</div>
-
-            <h3>Keep the source</h3>
-
-            <p>
-                Every clip stays connected to its original
-                webpage so you can return to the context.
-            </p>
-
-        </article>
-
+    <div class="steps">
+      <div class="step" data-reveal style="transition-delay:0s">
+        <span class="step-num">01</span>
+        <h3>Capture</h3>
+        <p>Highlight a passage, or mark the in/out points of a video moment as you watch.</p>
+      </div>
+      <div class="step" data-reveal style="transition-delay:.1s">
+        <span class="step-num">02</span>
+        <h3>Annotate</h3>
+        <p>Add your own reading beside it, while the context is still fresh.</p>
+      </div>
+      <div class="step" data-reveal style="transition-delay:.2s">
+        <span class="step-num">03</span>
+        <h3>Retrieve</h3>
+        <p>Pull it back up later — search finds it, and the source link still holds.</p>
+      </div>
     </div>
-
+  </div>
 </section>
 
-
- PUBLIC FEED 
-
-<section class="feed-section" id="feed">
-
-    <div class="feed-heading">
-
-        <div>
-
-            <span class="section-kicker">
-                COMMUNITY
-            </span>
-
-            <h2>
-                What people are clipping.
-            </h2>
-
-            <p>
-                Explore ideas, quotes, and commentary shared
-                through ClipNoter.
-            </p>
-
-        </div>
-
-        <div class="feed-status">
-            <span></span>
-            Live feed
-        </div>
-
+<section class="section" id="systems">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="display">Features</h2>
+      <p>What's onboard.</p>
     </div>
-
-
-    <div id="feed" class="feed-grid">
-
-        <div class="loading-card">
-
-            <div class="loading-spinner"></div>
-
-            <p>
-                Loading clips...
-            </p>
-
-        </div>
-
+    <div class="features">
+      <div class="feature" data-reveal style="transition-delay:0s">
+        <div class="feature-mark">Aa</div>
+        <h3>Text capture</h3>
+        <p>Save the exact wording, not a paraphrase of what you meant to remember.</p>
+        <div class="feature-meter" data-meter="97"><span></span></div>
+      </div>
+      <div class="feature" data-reveal style="transition-delay:.08s">
+        <div class="feature-mark">▶</div>
+        <h3>Video timestamping</h3>
+        <p>Mark in/out points on any video and jump straight back to that moment.</p>
+        <div class="feature-meter" data-meter="88"><span></span></div>
+      </div>
+      <div class="feature" data-reveal style="transition-delay:.16s">
+        <div class="feature-mark">⚓</div>
+        <h3>Source lock</h3>
+        <p>Every clip stays wired to the page it came from — no orphaned quotes.</p>
+        <div class="feature-meter" data-meter="100"><span></span></div>
+      </div>
+      <div class="feature" data-reveal style="transition-delay:.24s">
+        <div class="feature-mark">⌕</div>
+        <h3>Search</h3>
+        <p>Find the idea later by what it said, not by which tab it was in.</p>
+        <div class="feature-meter" data-meter="93"><span></span></div>
+      </div>
     </div>
-
+  </div>
 </section>
 
-
- CTA 
-
-<section class="cta-section">
-
-    <div class="cta-card">
-
-        <div class="cta-glow"></div>
-
-        <span class="section-kicker">
-            START CLIPPING
-        </span>
-
-        <h2>
-            Don't just save it.
-            <span>Remember why.</span>
-        </h2>
-
-        <p>
-            Turn the best parts of the web into notes
-            you can actually come back to.
-        </p>
-
-        <a
-            href="https://chromewebstore.google.com/detail/ClipNoterr-%E2%80%94-clip-comment/coflhhkdefdhkealolkmfpgpkkljlkoi"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn primary large"
-        >
-            Get ClipNoter
-            <span>→</span>
-        </a>
-
+<section class="section" id="platforms">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="display">ClipNoter for</h2>
+      <p>Works wherever you already read and watch.</p>
     </div>
-
+    <div class="platforms">
+      <div class="platform" data-reveal style="transition-delay:0s">
+        <div class="platform-mark">YT</div>
+        <h3>YouTube</h3>
+        <p>Mark in/out points mid-video and clip the exact line that mattered.</p>
+      </div>
+      <div class="platform" data-reveal style="transition-delay:.08s">
+        <div class="platform-mark">UD</div>
+        <h3>Udemy</h3>
+        <p>Save a lecture moment beside your own notes, without losing your place.</p>
+      </div>
+      <div class="platform" data-reveal style="transition-delay:.16s">
+        <div class="platform-mark">VI</div>
+        <h3>Vimeo</h3>
+        <p>Same timestamped clipping, wherever the video is actually hosted.</p>
+      </div>
+      <div class="platform" data-reveal style="transition-delay:.24s">
+        <div class="platform-mark">WB</div>
+        <h3>The open web</h3>
+        <p>Any article, thread, or page — highlight text and it's saved with its source.</p>
+      </div>
+    </div>
+    <p class="platform-note">More platforms are on the way — <a href="support.html#guide">see the guide</a> for what's supported today.</p>
+  </div>
 </section>
 
+<div class="wrap">
+  <div class="stats">
+    <div class="stat" data-reveal data-countup="1204"><span class="stat-num">0</span><span class="stat-label">Clips logged</span></div>
+    <div class="stat" data-reveal data-countup="86"><span class="stat-num">0</span><span class="stat-label">Sources linked</span></div>
+    <div class="stat" data-reveal data-countup="247"><span class="stat-num">0</span><span class="stat-label">Hours archived</span></div>
+  </div>
+</div>
 
-</main>
+<section class="section" id="log">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="display"><span class="live-dot" aria-hidden="true"></span>Recent activity</h2>
+      <p>What people are clipping right now.</p>
+    </div>
+    <div class="activity-list" id="feed">
+      <p class="feed-state">Loading recent clips…</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="display">FAQ</h2>
+      <p>The questions people actually ask.</p>
+    </div>
+    <div class="faq">
+      <details class="faq-question">
+        <summary>Is ClipNoter free?<span class="plus" aria-hidden="true"></span></summary>
+        <p>Yes. Install the extension and start clipping — no account required until you want to comment on someone else's clip.</p>
+      </details>
+      <details class="faq-question">
+        <summary>Where do my clips go?<span class="plus" aria-hidden="true"></span></summary>
+        <p>Every clip gets its own page with a shareable link, plus a listing in the public feed if you choose to share it there.</p>
+      </details>
+      <details class="faq-question">
+        <summary>Can I clip a video, not just text?<span class="plus" aria-hidden="true"></span></summary>
+        <p>Yes — mark an in and out point on any supported video and ClipNoter saves the timestamped moment, not just a screenshot.</p>
+      </details>
+      <details class="faq-question">
+        <summary>What if someone clips my content without permission?<span class="plus" aria-hidden="true"></span></summary>
+        <p>Use the "File a claim" button on any clip page. See our <a href="privacy.html#changes" style="color:var(--accent-2);font-weight:600;text-decoration:none;">DMCA policy</a> for the full process.</p>
+      </details>
+    </div>
+  </div>
+</section>
 
 <footer>
-
-
-<div class="footer-brand">
-
-    <a class="brand" href="index.html">
-        <span class="brand-icon">“</span>
-        ClipNoter
-    </a>
-
-    <p>
-        Commentary on the internet,
-        always linked back to its source.
-    </p>
-
-</div>
-
-
-<div class="footer-links">
-
-    <a href="#feed">
-        Explore
-    </a>
-
-    <a href="privacy.html">
-        Privacy
-    </a>
-
-    <a
-        href="https://chromewebstore.google.com/detail/ClipNoterr-%E2%80%94-clip-comment/coflhhkdefdhkealolkmfpgpkkljlkoi"
-        target="_blank"
-        rel="noopener noreferrer"
-    >
-        Extension
-    </a>
-
-</div>
-
-
-<div class="footer-bottom">
-    © 2026 ClipNoter. Built for better notes on the web.
-</div>
-
-
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="#top">
+        <span class="brand-mark">C</span>
+        <span class="brand-name">ClipNoter</span>
+      </a>
+      <p>Capture the things worth keeping from the web.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Product</div>
+      <a href="#sequence">How it works</a>
+      <a href="#systems">Features</a>
+      <a href="#platforms">Platforms</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">ClipNoter for</div>
+      <a href="#platforms">YouTube</a>
+      <a href="#platforms">Udemy</a>
+      <a href="#platforms">Vimeo</a>
+      <a href="#platforms">Web</a>
+      <a href="#platforms">More platforms</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Legal</div>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Support</div>
+      <a href="support.html#guide">Guide</a>
+      <a href="support.html#learn">Learn</a>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span class="footer-plate">© 2026 CLIPNOTER</span>
+    <a href="https://chromewebstore.google.com/detail/clipnoter-%E2%80%94-clip-comment/coflhhkdefdhkealolkmfpgpkkljlkoi" target="_blank" rel="noopener">Get the extension</a>
+  </div>
 </footer>
 
- SUPABASE 
+</div>
 
-<script src="https://esm.sh/@supabase/supabase-js@2"
-        type="module"
-        id="sb-loader"></script>
+<script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 
-<script src="config.js"></script>
-
-<script type="module">
-
-import { createClient }
-    from "https://esm.sh/@supabase/supabase-js@2";
-
-
-const cfg = window.MARGINAL_CONFIG;
-
-const supabase = createClient(
-    cfg.SUPABASE_URL,
-    cfg.SUPABASE_ANON_KEY
-);
-
-
-function escapeHtml(str) {
-
-    return (str || "").replace(
-        /[&<>"']/g,
-        (c) => ({
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;"
-        }[c])
-    );
-
-}
-
-
-function initials(name) {
-
-    return (name || "?")
-        .trim()
-        .slice(0, 2)
-        .toUpperCase();
-
-}
-
-
-async function loadFeed() {
-
-    const feedEl = document.getElementById("feed");
-
-
-    const { data, error } = await supabase
-        .from("clips_feed")
-        .select("*")
-        .limit(50);
-
-
-    if (error) {
-
-        feedEl.innerHTML = `
-            <div class="empty-state">
-
-                <div class="empty-icon">!</div>
-
-                <h3>Couldn't load the feed</h3>
-
-                <p>
-                    ${escapeHtml(error.message)}
-                </p>
-
-            </div>
-        `;
-
-        return;
-
-    }
-
-
-    if (!data || data.length === 0) {
-
-        feedEl.innerHTML = `
-            <div class="empty-state">
-
-                <div class="empty-icon">✦</div>
-
-                <h3>No clips yet</h3>
-
-                <p>
-                    Be the first to share something with ClipNoter.
-                </p>
-
-                <a
-                    href="https://chromewebstore.google.com/detail/ClipNoterr-%E2%80%94-clip-comment/coflhhkdefdhkealolkmfpgpkkljlkoi"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn primary"
-                >
-                    Get ClipNoter
-                </a>
-
-            </div>
-        `;
-
-        return;
-
-    }
-
-
-    feedEl.innerHTML = data.map((c) => `
-
-        <a
-            class="feed-item"
-            href="clip.html?slug=${encodeURIComponent(c.slug)}"
-        >
-
-            <article class="clip-card">
-
-                <div class="author-row">
-
-                    <span class="avatar">
-                        ${initials(
-                            c.author_display_name ||
-                            c.author_username
-                        )}
-                    </span>
-
-                    <div class="author-info">
-
-                        <strong>
-                            ${escapeHtml(
-                                c.author_display_name ||
-                                c.author_username
-                            )}
-                        </strong>
-
-                        <span>
-                            ${new Date(
-                                c.created_at
-                            ).toLocaleDateString()}
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <blockquote class="quote">
-
-                    “${escapeHtml(
-                        (c.quoted_text || "").slice(0, 220)
-                    )}${(c.quoted_text || "").length > 220 ? "…" : ""}”
-
-                </blockquote>
-
-
-                ${
-                    c.commentary
-                    ? `
-                        <div class="commentary">
-                            ${escapeHtml(
-                                c.commentary.slice(0, 220)
-                            )}${c.commentary.length > 220 ? "…" : ""}
-                        </div>
-                    `
-                    : ""
-                }
-
-
-                <div class="clip-source">
-
-                    <span class="source-icon">↗</span>
-
-                    <span>
-                        ${escapeHtml(
-                            c.source_domain || "Web"
-                        )}
-                    </span>
-
-                    <span class="source-arrow">
-                        →
-                    </span>
-
-                </div>
-
-            </article>
-
-        </a>
-
-    `).join("");
-
-}
-
-
-loadFeed();
-
-</script>
 <script>
-(() => {
-    "use strict";
+(function () {
+  "use strict";
+  var root = document.documentElement;
+  var toggle = document.getElementById("theme-toggle");
+  var buttons = toggle ? toggle.querySelectorAll(".theme-btn") : [];
 
-    // Gentle floating drift for the decorative .hero-clips cards.
-    // Skipped entirely for prefers-reduced-motion - this is pure
-    // decoration (already aria-hidden), so it has no business moving
-    // for anyone who's asked their OS not to animate things.
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        return;
+  function resolve(pref) {
+    if (pref === "auto") return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return pref;
+  }
+  function applyTheme(pref) {
+    root.setAttribute("data-theme", resolve(pref));
+    try { localStorage.setItem("clipnoter-theme-pref", pref); } catch (e) {}
+    buttons.forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-theme-choice") === pref ? "true" : "false");
+    });
+    if (toggle) {
+      toggle.classList.remove("is-switching");
+      void toggle.offsetWidth;
+      toggle.classList.add("is-switching");
     }
+    window.dispatchEvent(new CustomEvent("clipnoter:theme"));
+  }
 
-    const cards = Array.from(
-        document.querySelectorAll(".hero-clips .hero-clip")
-    );
+  var storedPref = "auto";
+  try { storedPref = localStorage.getItem("clipnoter-theme-pref") || "auto"; } catch (e) {}
+  applyTheme(storedPref);
 
-    if (cards.length === 0) {
-        return;
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () { applyTheme(btn.getAttribute("data-theme-choice")); });
+  });
+
+  var systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+  if (systemDark.addEventListener) {
+    systemDark.addEventListener("change", function () {
+      var pref = "auto";
+      try { pref = localStorage.getItem("clipnoter-theme-pref") || "auto"; } catch (e) {}
+      if (pref === "auto") applyTheme("auto");
+    });
+  }
+
+  function onScroll() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    var fill = document.getElementById("progress-fill");
+    if (fill) fill.style.width = (progress * 100).toFixed(1) + "%";
+  }
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+
+  function animateCount(el) {
+    var target = parseInt(el.getAttribute("data-countup"), 10) || 0;
+    var numEl = el.querySelector(".stat-num");
+    var duration = 1100;
+    var start = null;
+    function frame(now) {
+      if (!start) start = now;
+      var p = Math.min(1, (now - start) / duration);
+      numEl.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))).toLocaleString();
+      if (p < 1) requestAnimationFrame(frame);
     }
+    requestAnimationFrame(frame);
+  }
 
-    const drifters = cards.map((el, index) => {
-        // Read the rotation each card already gets from its
-        // .hero-clip--N CSS rule, instead of duplicating those degree
-        // values here - decompose the computed transform matrix back
-        // into an angle.
-        const matrix = window.getComputedStyle(el).transform;
-        let baseRotateDeg = 0;
-        const match = matrix.match(/matrix\(([^)]+)\)/);
-        if (match) {
-            const [a, b] = match[1].split(",").map(Number);
-            baseRotateDeg = Math.atan2(b, a) * (180 / Math.PI);
+  function setMeter(el, on) {
+    var meter = el.querySelector("[data-meter]");
+    if (!meter) return;
+    var span = meter.querySelector("span");
+    span.style.width = (on ? meter.getAttribute("data-meter") : "0") + "%";
+  }
+
+  var revealEls = document.querySelectorAll("[data-reveal]");
+  if ("IntersectionObserver" in window && revealEls.length) {
+    var counted = new WeakSet();
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var el = entry.target;
+        if (entry.isIntersecting) {
+          el.classList.add("in-view");
+          setMeter(el, true);
+          if (el.hasAttribute("data-countup") && !counted.has(el)) {
+            counted.add(el);
+            animateCount(el);
+          }
+        } else {
+          el.classList.remove("in-view");
+          setMeter(el, false);
         }
+      });
+    }, { threshold: 0.25 });
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add("in-view"); });
+  }
 
-        return {
-            el,
-            baseRotateDeg,
-            amplitudeX: 6 + (index % 3) * 2,
-            amplitudeY: 8 + (index % 2) * 3,
-            speed: 0.00028 + index * 0.00006,
-            phase: index * 1.7
-        };
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!reduceMotion) {
+    document.querySelectorAll(".clip-card").forEach(function (card) {
+      card.addEventListener("mousemove", function (e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5;
+        var y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = "perspective(800px) rotateY(" + (x * 6) + "deg) rotateX(" + (-y * 6) + "deg)";
+      });
+      card.addEventListener("mouseleave", function () { card.style.transform = ""; });
     });
 
-    function tick(timestamp) {
-        for (const drifter of drifters) {
-            const t = timestamp * drifter.speed + drifter.phase;
-            const dx = Math.sin(t) * drifter.amplitudeX;
-            const dy = Math.cos(t * 0.8) * drifter.amplitudeY;
-
-            drifter.el.style.transform =
-                `rotate(${drifter.baseRotateDeg.toFixed(2)}deg) translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
-        }
-
-        requestAnimationFrame(tick);
+    var glow = document.getElementById("cn-cursor-glow");
+    var intro = document.querySelector(".intro");
+    if (glow && intro) {
+      intro.addEventListener("mouseenter", function () { glow.classList.add("is-active"); });
+      intro.addEventListener("mouseleave", function () { glow.classList.remove("is-active"); });
+      intro.addEventListener("mousemove", function (e) {
+        glow.style.left = e.clientX + "px";
+        glow.style.top = e.clientY + "px";
+      });
     }
+  }
 
-    requestAnimationFrame(tick);
+  document.querySelectorAll(".faq details").forEach(function (d) {
+    d.addEventListener("toggle", function () {
+      if (d.open) {
+        document.querySelectorAll(".faq details").forEach(function (o) {
+          if (o !== d) o.open = false;
+        });
+      }
+    });
+  });
 })();
 </script>
-</body>
 
-</html> 
- -->
-
- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>ClipNoter — Capture. Remember. Revisit.</title>
-
-    <meta
-        name="description"
-        content="ClipNoter lets you capture text, record moments, add notes, and keep the things that matter from the web."
-    >
-
-    <meta
-        name="theme-color"
-        content="#07080d"
-    >
-
-    <link
-        rel="stylesheet"
-        href="styles.css"
-    >
-    <link rel="shortcut icon" href="icon.png" type="image/x-icon">
-    <meta name="google-site-verification" content="-j4_48fB_RojCwCIly9nF2QGtWtPbh_WTZdBzpV_B3E" />
-</head>
-
-<body>
-
-<!-- =====================================================
-     BACKGROUND
-===================================================== -->
-
-<div class="background-effects" aria-hidden="true">
-    <div class="orb orb-purple"></div>
-    <div class="orb orb-teal"></div>
-    <div class="grid-overlay"></div>
-</div>
-
-
-<!-- =====================================================
-     NAVIGATION
-===================================================== -->
-
-<header class="site-header">
-
-    <div class="nav-container">
-
-        <a
-            href="index.html"
-            class="brand"
-            aria-label="ClipNoter home"
-        >
-            <span class="brand-mark">
-                <span></span>
-                <span></span>
-            </span>
-
-            <span class="brand-name">
-                Clip<span>Noter</span>
-            </span>
-        </a>
-
-
-        <nav
-            class="desktop-nav"
-            aria-label="Main navigation"
-        >
-
-            <a href="#how">
-                How it works
-            </a>
-
-            <a href="#features">
-                Features
-            </a>
-
-            <a href="#platforms">
-                Platforms
-            </a>
-
-            <a href="#faq">
-                FAQ
-            </a>
-
-        </nav>
-
-
-        <div class="nav-actions">
-
-            <a
-                href="privacy.html"
-                class="nav-text-link"
-            >
-                Privacy
-            </a>
-
-            <a
-                href="#get-started"
-                class="button button-primary button-small"
-            >
-                Get ClipNoter
-                <span>↗</span>
-            </a>
-
-        </div>
-
-    </div>
-
-</header>
-
-
-<main>
-
-
-<!-- =====================================================
-     HERO
-===================================================== -->
-
-<section class="hero">
-
-    <div class="hero-container">
-
-        <div class="hero-copy">
-
-            <div class="status-pill">
-
-                <span class="status-dot"></span>
-
-                Your personal space for the web
-
-            </div>
-
-
-            <h1>
-
-                Capture what
-                <span>matters.</span>
-
-                <br>
-
-                Remember it
-                <span>later.</span>
-
-            </h1>
-
-
-            <p class="hero-description">
-
-                Save important text, record moments, write notes,
-                and keep everything connected to where you found it.
-
-                <strong>
-                    Clip it once. Find it whenever you need it.
-                </strong>
-
-            </p>
-
-
-            <div class="hero-buttons">
-
-                <a
-                    href="#get-started"
-                    class="button button-primary button-large"
-                >
-                    Start clipping
-
-                    <span>→</span>
-                </a>
-
-
-                <a
-                    href="#how"
-                    class="button button-secondary button-large"
-                >
-                    See how it works
-
-                    <span>↓</span>
-                </a>
-
-            </div>
-
-
-            <div class="hero-benefits">
-
-                <div>
-                    <span class="benefit-icon">✦</span>
-                    Text clipping
-                </div>
-
-                <div>
-                    <span class="benefit-icon">◉</span>
-                    Video recording
-                </div>
-
-                <div>
-                    <span class="benefit-icon">⌕</span>
-                    Searchable notes
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- PRODUCT MOCKUP -->
-
-        <div class="hero-product">
-
-            <div class="product-glow"></div>
-
-
-            <div class="app-window">
-
-                <div class="window-bar">
-
-                    <div class="window-controls">
-
-                        <span></span>
-                        <span></span>
-                        <span></span>
-
-                    </div>
-
-
-                    <div class="fake-address">
-
-                        <span class="address-lock">⌁</span>
-
-                        youtube.com/watch
-
-                    </div>
-
-
-                    <div class="window-menu">
-                        •••
-                    </div>
-
-                </div>
-
-
-                <div class="app-content">
-
-                    <div class="video-preview">
-
-                        <div class="video-gradient">
-
-                            <div class="play-button">
-                                ▶
-                            </div>
-
-                            <span class="video-label">
-                                VIDEO
-                            </span>
-
-                        </div>
-
-
-                        <div class="video-controls">
-
-                            <div class="progress">
-                                <span></span>
-                            </div>
-
-                            <div class="video-time">
-                                18:42 / 42:10
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <aside class="notes-panel">
-
-                        <div class="notes-header">
-
-                            <div>
-                                <small>ClipNoter</small>
-                                <strong>My Notes</strong>
-                            </div>
-
-                            <button>
-                                +
-                            </button>
-
-                        </div>
-
-
-                        <div class="note-card active">
-
-                            <div class="note-time">
-                                18:42
-                            </div>
-
-                            <p>
-                                This explains the main idea
-                                really clearly.
-                            </p>
-
-                            <div class="note-tags">
-
-                                <span>#important</span>
-
-                                <span>#learning</span>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="note-card">
-
-                            <div class="note-time">
-                                24:17
-                            </div>
-
-                            <p>
-                                Come back to this example later.
-                            </p>
-
-                        </div>
-
-
-                        <div class="note-card">
-
-                            <div class="note-time">
-                                31:08
-                            </div>
-
-                            <p>
-                                This could be useful for the project.
-                            </p>
-
-                        </div>
-
-                    </aside>
-
-                </div>
-
-            </div>
-
-
-            <div class="floating-card floating-card-one">
-
-                <span class="floating-icon">
-                    ✓
-                </span>
-
-                <div>
-                    <strong>
-                        Saved
-                    </strong>
-
-                    <small>
-                        18:42 timestamp
-                    </small>
-                </div>
-
-            </div>
-
-
-            <div class="floating-card floating-card-two">
-
-                <span class="floating-icon">
-                    ⌕
-                </span>
-
-                <div>
-                    <strong>
-                        Search
-                    </strong>
-
-                    <small>
-                        128 saved clips
-                    </small>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     TRUST / PLATFORM STRIP
-===================================================== -->
-
-<section class="platform-strip" id="platforms">
-
-    <div class="container">
-
-        <p class="platform-label">
-            Capture from the places you already use
-        </p>
-
-
-        <div class="platform-list">
-
-            <span>
-                <b>▶</b>
-                YouTube
-            </span>
-
-            <span>
-                <b>U</b>
-                Udemy
-            </span>
-
-            <span>
-                <b>V</b>
-                Vimeo
-            </span>
-
-            <span>
-                <b>◎</b>
-                Web
-            </span>
-
-            <span>
-                <b>✦</b>
-                Articles
-            </span>
-
-            <span>
-                <b>+</b>
-                More
-            </span>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     HOW IT WORKS
-===================================================== -->
-
-<section
-    class="section how-section"
-    id="how"
->
-
-    <div class="container">
-
-        <div class="section-intro reveal">
-
-            <div class="eyebrow">
-                HOW IT WORKS
-            </div>
-
-            <h2>
-                From finding something
-                <span>to actually remembering it.</span>
-            </h2>
-
-            <p>
-                ClipNoter keeps the process simple.
-                Capture the moment, add your thoughts,
-                and come back whenever you need it.
-            </p>
-
-        </div>
-
-
-        <div class="steps-grid">
-
-
-            <article class="step-card reveal">
-
-                <div class="step-number">
-                    01
-                </div>
-
-                <div class="step-icon">
-                    ⌖
-                </div>
-
-                <h3>
-                    Capture
-                </h3>
-
-                <p>
-                    Highlight text, save a page,
-                    or record a moment directly from
-                    what you're viewing.
-                </p>
-
-                <div class="step-line"></div>
-
-            </article>
-
-
-            <article class="step-card reveal">
-
-                <div class="step-number">
-                    02
-                </div>
-
-                <div class="step-icon">
-                    ✎
-                </div>
-
-                <h3>
-                    Add context
-                </h3>
-
-                <p>
-                    Write your own thoughts beside
-                    the clip so you remember why
-                    you saved it.
-                </p>
-
-                <div class="step-line"></div>
-
-            </article>
-
-
-            <article class="step-card reveal">
-
-                <div class="step-number">
-                    03
-                </div>
-
-                <div class="step-icon">
-                    ⌕
-                </div>
-
-                <h3>
-                    Find it again
-                </h3>
-
-                <p>
-                    Search through your saved clips
-                    and jump back to the original
-                    source whenever you need it.
-                </p>
-
-            </article>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     FEATURES
-===================================================== -->
-
-<section
-    class="section features-section"
-    id="features"
->
-
-    <div class="container">
-
-        <div class="section-intro centered reveal">
-
-            <div class="eyebrow">
-                FEATURES
-            </div>
-
-            <h2>
-                One place for
-                <span>everything worth keeping.</span>
-            </h2>
-
-            <p>
-                ClipNoter combines clipping, recording,
-                notes, organization, and search into one
-                simple workspace.
-            </p>
-
-        </div>
-
-
-        <div class="feature-grid">
-
-
-            <!-- TEXT CLIPPING -->
-
-            <article class="feature-card feature-large reveal">
-
-                <div class="feature-content">
-
-                    <span class="feature-kicker">
-                        TEXT CLIPPING
-                    </span>
-
-                    <h3>
-                        Save the exact words
-                        that caught your attention.
-                    </h3>
-
-                    <p>
-                        Highlight something useful and
-                        keep the original context attached
-                        to your clip.
-                    </p>
-
-                    <div class="feature-points">
-
-                        <span>
-                            ✓ Preserve the source
-                        </span>
-
-                        <span>
-                            ✓ Add personal notes
-                        </span>
-
-                        <span>
-                            ✓ Organize later
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="feature-visual text-clip-visual">
-
-                    <div class="fake-browser-content">
-
-                        <div class="fake-lines">
-
-                            <span></span>
-                            <span></span>
-
-                            <span class="highlight">
-                                The important idea starts here.
-                            </span>
-
-                            <span class="highlight short">
-                                This is the part worth remembering.
-                            </span>
-
-                            <span></span>
-                            <span></span>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="clip-popover">
-
-                        <div class="popover-title">
-                            Clip saved
-                        </div>
-
-                        <p>
-                            Add a note about this.
-                        </p>
-
-                        <button>
-                            Save clip
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- VIDEO RECORDING -->
-
-            <article class="feature-card feature-large dark-card" reveal>
-
-                <div class="feature-content">
-
-                    <span class="feature-kicker">
-                        VIDEO RECORDING
-                    </span>
-
-                    <h3>
-                        Record the moment,
-                        not just the link.
-                    </h3>
-
-                    <p>
-                        Capture important moments while
-                        you're watching so you can revisit
-                        them later.
-                    </p>
-
-                    <div class="recording-status">
-
-                        <span></span>
-
-                        Recording available
-
-                    </div>
-
-                </div>
-
-
-                <div class="feature-visual recording-visual">
-
-                    <div class="recording-screen">
-
-                        <div class="recording-top">
-
-                            <span>
-                                ClipNoter RECORDER
-                            </span>
-
-                            <b>
-                                ● REC
-                            </b>
-
-                        </div>
-
-
-                        <div class="recording-center">
-
-                            <div class="recording-ring">
-                                <span>◉</span>
-                            </div>
-
-                            <strong>
-                                00:18:42
-                            </strong>
-
-                            <small>
-                                Capturing your moment
-                            </small>
-
-                        </div>
-
-
-                        <div class="recording-bottom">
-
-                            <button>
-                                Pause
-                            </button>
-
-                            <button class="stop">
-                                Stop recording
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- SEARCH -->
-
-            <article class="feature-card reveal">
-
-                <div class="feature-icon">
-                    ⌕
-                </div>
-
-                <span class="feature-kicker">
-                    SEARCH
-                </span>
-
-                <h3>
-                    Find the idea,
-                    not the tab.
-                </h3>
-
-                <p>
-                    Search your saved clips and notes
-                    instead of trying to remember where
-                    you originally saw something.
-                </p>
-
-
-                <div class="search-demo">
-
-                    <div class="search-input">
-                        <span>⌕</span>
-                        spaced repetition
-                    </div>
-
-                    <div class="search-result">
-
-                        <small>
-                            12:47
-                        </small>
-
-                        <strong>
-                            Why spaced repetition works
-                        </strong>
-
-                    </div>
-
-                    <div class="search-result">
-
-                        <small>
-                            31:05
-                        </small>
-
-                        <strong>
-                            The forgetting curve
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- ORGANIZE -->
-
-            <article class="feature-card reveal">
-
-                <div class="feature-icon">
-                    ◈
-                </div>
-
-                <span class="feature-kicker">
-                    ORGANIZE
-                </span>
-
-                <h3>
-                    Turn scattered clips
-                    into a library.
-                </h3>
-
-                <p>
-                    Group your ideas with tags and
-                    collections so your saved knowledge
-                    stays useful.
-                </p>
-
-
-                <div class="tag-demo">
-
-                    <span>#school</span>
-                    <span>#ideas</span>
-                    <span>#coding</span>
-                    <span>#research</span>
-                    <span>#important</span>
-
-                </div>
-
-            </article>
-
-
-            <!-- EXPORT -->
-
-            <article class="feature-card feature-wide reveal">
-
-                <div class="feature-content">
-
-                    <span class="feature-kicker">
-                        EXPORT
-                    </span>
-
-                    <h3>
-                        Your notes should
-                        belong to you.
-                    </h3>
-
-                    <p>
-                        Export your saved information
-                        whenever you want and keep it
-                        useful outside of ClipNoter.
-                    </p>
-
-                    <button class="fake-export">
-                        Export notes
-                        <span>↓</span>
-                    </button>
-
-                </div>
-
-
-                <div class="export-preview">
-
-                    <div class="file-header">
-                        <span>notes.md</span>
-                        <span>✓ Ready</span>
-                    </div>
-
-                    <div class="markdown-lines">
-
-                        <span class="md-heading">
-                            # My saved notes
-                        </span>
-
-                        <span>
-                            ## Important ideas
-                        </span>
-
-                        <span>
-                            **18:42** — Main concept
-                        </span>
-
-                        <span>
-                            **24:17** — Useful example
-                        </span>
-
-                        <span>
-                            **31:08** — Review later
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     VALUE SECTION
-===================================================== -->
-
-<section class="section value-section">
-
-    <div class="container">
-
-        <div class="value-layout">
-
-            <div>
-
-                <div class="eyebrow">
-                    BUILT AROUND YOUR MEMORY
-                </div>
-
-                <h2>
-                    Don't collect
-                    <span>tabs.</span>
-                    Collect ideas.
-                </h2>
-
-                <p>
-                    The internet is full of information.
-                    The hard part is keeping the useful
-                    pieces long enough to actually use them.
-                </p>
-
-            </div>
-
-
-            <div class="value-list">
-
-                <div class="value-item reveal">
-
-                    <span>01</span>
-
-                    <div>
-                        <strong>
-                            Source stays attached
-                        </strong>
-
-                        <p>
-                            Every saved item keeps the
-                            connection to where it came from.
-                        </p>
-                    </div>
-
-                </div>
-
-
-                <div class="value-item reveal">
-
-                    <span>02</span>
-
-                    <div>
-                        <strong>
-                            Your thoughts stay yours
-                        </strong>
-
-                        <p>
-                            Add your own explanation instead
-                            of relying on a forgotten bookmark.
-                        </p>
-                    </div>
-
-                </div>
-
-
-                <div class="value-item reveal">
-
-                    <span>03</span>
-
-                    <div>
-                        <strong>
-                            Everything becomes searchable
-                        </strong>
-
-                        <p>
-                            Turn scattered discoveries into
-                            something you can actually revisit.
-                        </p>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     COMMUNITY / FEED
-===================================================== -->
-
-<section class="section community-section">
-
-    <div class="container">
-
-        <div class="community-heading">
-
-            <div>
-
-                <div class="eyebrow">
-                    DISCOVER
-                </div>
-
-                <h2>
-                    See what people
-                    <span>are saving.</span>
-                </h2>
-
-                <p>
-                    Explore useful clips and ideas from
-                    the ClipNoter community.
-                </p>
-
-            </div>
-
-
-            <div class="live-pill">
-
-                <span></span>
-
-                Live library
-
-            </div>
-
-        </div>
-
-
-        <div
-            id="feed"
-            class="feed-grid reveal"
-        >
-
-            <div class="loading-card">
-
-                <div class="loading-spinner"></div>
-
-                <p>
-                    Loading clips...
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     FAQ
-===================================================== -->
-
-<section
-    class="section faq-section"
-    id="faq"
->
-
-    <div class="container faq-layout">
-
-        <div class="faq-intro">
-
-            <div class="eyebrow">
-                FAQ
-            </div>
-
-            <h2>
-                Questions?
-                <span>We've got answers.</span>
-            </h2>
-
-            <p>
-                Everything you need to know before
-                you start clipping.
-            </p>
-
-        </div>
-
-
-        <div class="faq-list">
-
-
-            <details>
-                <summary>
-                    What can I save with ClipNoter?
-                    <span>+</span>
-                </summary>
-
-                <p>
-                    You can save text clips, notes,
-                    webpages, and supported video moments.
-                    The exact capabilities depend on the
-                    ClipNoter extension and platform.
-                </p>
-            </details>
-
-
-            <details>
-                <summary>
-                    Can I record video?
-                    <span>+</span>
-                </summary>
-
-                <p>
-                    ClipNoter is designed to support video
-                    recording alongside your normal clipping
-                    workflow.
-                </p>
-            </details>
-
-
-            <details>
-                <summary>
-                    Can I search my saved clips?
-                    <span>+</span>
-                </summary>
-
-                <p>
-                    Yes. Your saved content can be organized
-                    and searched so you can find previous
-                    ideas without digging through old tabs.
-                </p>
-            </details>
-
-
-            <details>
-                <summary>
-                    Do my clips keep their source?
-                    <span>+</span>
-                </summary>
-
-                <p>
-                    Clips can retain source information so
-                    you can return to the original context.
-                </p>
-            </details>
-
-
-            <details>
-                <summary>
-                    Is ClipNoter free?
-                    <span>+</span>
-                </summary>
-
-                <p>
-                    ClipNote's availability and feature
-                    limits depend on the current version
-                    of the extension.
-                </p>
-            </details>
-
-
-            <details>
-                <summary>
-                    What browsers are supported?
-                    <span>+</span>
-                </summary>
-
-                <p>
-                    Check the extension installation page
-                    for the currently supported browsers.
-                </p>
-            </details>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     CTA
-===================================================== -->
-
-<section
-    class="cta-section"
-    id="get-started"
->
-
-    <div class="container">
-
-        <div class="cta-card reveal">
-
-            <div class="cta-light"></div>
-
-            <div class="eyebrow">
-                START CLIPPING
-            </div>
-
-            <h2>
-                Find something useful.
-                <span>Keep it.</span>
-            </h2>
-
-            <p>
-                Turn the best parts of the web into
-                something you can actually remember.
-            </p>
-
-
-            <div class="cta-actions">
-
-                <a
-                    href="https://chrome.google.com/webstore"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="button button-primary button-large"
-                >
-                    Get ClipNoter
-                    <span>↗</span>
-                </a>
-
-                <a
-                    href="privacy.html"
-                    class="button button-secondary button-large"
-                >
-                    Privacy first
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-</main>
-
-
-<!-- =====================================================
-     FOOTER
-===================================================== -->
-
-<footer class="site-footer">
-
-    <div class="container">
-
-        <div class="footer-main">
-
-
-            <div class="footer-brand reveal">
-
-                <a
-                    href="index.html"
-                    class="brand"
-                >
-
-                    <span class="brand-mark">
-                        <span></span>
-                        <span></span>
-                    </span>
-
-                    <span class="brand-name">
-                        Clip<span>Note</span>
-                    </span>
-
-                </a>
-
-
-                <p>
-                    Capture the things worth keeping
-                    from the web.
-                </p>
-
-            </div>
-
-
-            <div class="footer-column">
-
-                <h4>
-                    Product
-                </h4>
-
-                <a href="#how">
-                    How it works
-                </a>
-
-                <a href="#features">
-                    Features
-                </a>
-
-                <a href="#platforms">
-                    Platforms
-                </a>
-
-                <a href="#faq">
-                    FAQ
-                </a>
-
-            </div>
-
-
-            <div class="footer-column">
-
-                <h4>
-                    ClipNoter for
-                </h4>
-
-                <a href="#platforms">
-                    YouTube
-                </a>
-
-                <a href="#platforms">
-                    Udemy
-                </a>
-
-                <a href="#platforms">
-                    Vimeo
-                </a>
-
-                <a href="#platforms">
-                    Web
-                </a>
-
-                <a href="#platforms">
-                    More platforms
-                </a>
-
-            </div>
-
-
-            <div class="footer-column">
-
-                <h4>
-                    Legal
-                </h4>
-
-                <a href="privacy.html">
-                    Privacy Policy
-                </a>
-
-                <a href="#">
-                    Terms of Service
-                </a>
-
-            </div>
-
-
-            <div class="footer-column">
-
-                <h4>
-                    Support
-                </h4>
-
-                <a href="#faq">
-                    Guide
-                </a>
-
-                <a href="#features">
-                    Learn
-                </a>
-
-                <a href="mailto:careercapital41@gmail.com">
-                    Support
-                </a>
-
-            </div>
-
-
-        </div>
-
-
-        <div class="footer-bottom">
-
-            <span>
-                © 2026 ClipNoter. All rights reserved.
-            </span>
-
-            <span>
-                Built for people who save things.
-            </span>
-
-        </div>
-
-    </div>
-
-</footer>
-
-
-<!-- =====================================================
-     SUPABASE FEED
-===================================================== -->
-
-<script src="https://esm.sh/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  "use strict";
+
+  var canvas = document.getElementById("cn-bg3d");
+  if (!canvas || typeof THREE === "undefined") return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (window.matchMedia("(max-width: 860px)").matches) return;
+
+  var CLIPS = [
+    { time: "00:41", text: "The bottleneck was never compute. It was always attention.", tag: "#research" },
+    { time: "02:13", text: "Ship the smallest thing that teaches you something true.", tag: "#product" },
+    { time: "00:58", text: "A source you can't relink is just a rumor with formatting.", tag: "#notes" },
+    { time: "01:27", text: "Good defaults are a form of respect for the reader's time.", tag: "#design" },
+    { time: "03:04", text: "Every clip is a promise to your future self.", tag: "#archive" },
+    { time: "01:52", text: "Context collapses the moment you copy without the source.", tag: "#writing" }
+  ];
+
+  var INK_SOFT = "#252119";
+  var PAPER = "#EFE3C8";
+  var BRASS_BRIGHT = "#C79A54";
+
+  function themeIsDark() {
+    var attr = document.documentElement.getAttribute("data-theme");
+    if (attr === "dark") return true;
+    if (attr === "light") return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+
+  function roundRectPath(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+    var words = text.split(" ");
+    var line = "";
+    var lines = [];
+    for (var i = 0; i < words.length; i++) {
+      var test = line + words[i] + " ";
+      if (ctx.measureText(test).width > maxWidth && line !== "") {
+        lines.push(line);
+        line = words[i] + " ";
+      } else {
+        line = test;
+      }
+    }
+    lines.push(line);
+    if (lines.length > maxLines) lines = lines.slice(0, maxLines);
+    for (var j = 0; j < lines.length; j++) ctx.fillText(lines[j].trim(), x, y + j * lineHeight);
+    return lines.length;
+  }
+
+  function makeCardTexture(clip) {
+    var w = 512, h = 320;
+    var cvs = document.createElement("canvas");
+    cvs.width = w; cvs.height = h;
+    var ctx = cvs.getContext("2d");
+
+    ctx.save();
+    ctx.shadowColor = "rgba(0,0,0,0.35)";
+    ctx.shadowBlur = 24;
+    ctx.shadowOffsetY = 12;
+    ctx.fillStyle = INK_SOFT;
+    roundRectPath(ctx, 16, 16, w - 32, h - 32, 14);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.strokeStyle = BRASS_BRIGHT;
+    ctx.globalAlpha = 0.55;
+    ctx.lineWidth = 2;
+    roundRectPath(ctx, 16, 16, w - 32, h - 32, 14);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = BRASS_BRIGHT;
+    ctx.font = "600 20px 'Space Mono', monospace";
+    ctx.fillText(clip.time, 40, 64);
+
+    ctx.fillStyle = PAPER;
+    ctx.font = "italic 500 26px Georgia, 'Times New Roman', serif";
+    wrapText(ctx, clip.text, 40, 118, w - 80, 34, 4);
+
+    ctx.fillStyle = BRASS_BRIGHT;
+    ctx.font = "500 16px 'Space Mono', monospace";
+    ctx.fillText(clip.tag, 40, h - 34);
+
+    var tex = new THREE.CanvasTexture(cvs);
+    tex.needsUpdate = true;
+    return tex;
+  }
+
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x131316, 220, 950);
+
+  var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 2000);
+  camera.position.set(0, 0, 480);
+
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+  renderer.setClearColor(0x000000, 0);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  var group = new THREE.Group();
+  scene.add(group);
+
+  var cards = [];
+  var CARD_COUNT = 8;
+
+  function placeCard(mesh) {
+    mesh.position.set(
+      (Math.random() - 0.5) * 1300,
+      (Math.random() - 0.5) * 850,
+      (Math.random() - 0.5) * 650 - 100
+    );
+    mesh.rotation.set((Math.random() - 0.5) * 0.3, (Math.random() - 0.5) * 0.5, (Math.random() - 0.5) * 0.2);
+  }
+
+  for (var i = 0; i < CARD_COUNT; i++) {
+    var clip = CLIPS[i % CLIPS.length];
+    var texture = makeCardTexture(clip);
+    var aspect = 320 / 512;
+    var w = 150;
+    var geo = new THREE.PlaneGeometry(w, w * aspect);
+    var mat = new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: 0.72, depthWrite: false });
+    var mesh = new THREE.Mesh(geo, mat);
+    placeCard(mesh);
+    mesh.userData.driftSeed = Math.random() * Math.PI * 2;
+    mesh.userData.driftSpeed = 0.12 + Math.random() * 0.2;
+    group.add(mesh);
+    cards.push(mesh);
+  }
+
+  var mouse = { x: 0, y: 0 };
+  window.addEventListener("mousemove", function (e) {
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
+  }, { passive: true });
+
+  var lastScrollY = window.scrollY;
+  var scrollVelocity = 0;
+  var smoothedVelocity = 0;
+  window.addEventListener("scroll", function () {
+    var y = window.scrollY;
+    scrollVelocity = y - lastScrollY;
+    lastScrollY = y;
+  }, { passive: true });
+
+  function scrollFraction() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    return max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+  }
+
+  window.addEventListener("resize", function () {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }, { passive: true });
+
+  var running = themeIsDark();
+  var rafId = null;
+  var clock = new THREE.Clock();
+
+  window.addEventListener("clipnoter:theme", function () {
+    var shouldRun = themeIsDark();
+    if (shouldRun && !running) {
+      running = true;
+      clock.start();
+      rafId = requestAnimationFrame(animate);
+    } else if (!shouldRun && running) {
+      running = false;
+      canvas.classList.remove("is-ready");
+      if (rafId) cancelAnimationFrame(rafId);
+    }
+  });
+
+  function animate() {
+    if (!running) return;
+    rafId = requestAnimationFrame(animate);
+    var t = clock.getElapsedTime();
+
+    smoothedVelocity += (scrollVelocity - smoothedVelocity) * 0.08;
+    scrollVelocity *= 0.9;
+
+    for (var i = 0; i < cards.length; i++) {
+      var c = cards[i];
+      var seed = c.userData.driftSeed;
+      var speed = c.userData.driftSpeed;
+      c.position.y += smoothedVelocity * 0.16;
+      c.position.x += Math.sin(t * speed + seed) * 0.05;
+      c.rotation.z = Math.sin(t * speed * 0.5 + seed) * 0.05;
+      if (c.position.y > 470) c.position.y = -470;
+      if (c.position.y < -470) c.position.y = 470;
+    }
+
+    var frac = scrollFraction();
+    group.rotation.y = frac * 0.5 - 0.25;
+
+    camera.position.x += (mouse.x * 36 - camera.position.x) * 0.04;
+    camera.position.y += (-mouse.y * 20 - camera.position.y) * 0.04;
+    camera.position.z = 480 - frac * 160;
+    camera.lookAt(0, 0, 0);
+
+    renderer.render(scene, camera);
+  }
+
+  if (running) {
+    animate();
+    requestAnimationFrame(function () { canvas.classList.add("is-ready"); });
+  }
+})();
+</script>
 
 <script src="config.js"></script>
-
 <script type="module">
-
-import { createClient }
-    from "https://esm.sh/@supabase/supabase-js@2";
-
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const cfg = window.MARGINAL_CONFIG;
-
-
-if (
-    cfg &&
-    cfg.SUPABASE_URL &&
-    cfg.SUPABASE_ANON_KEY
-) {
-
-    const supabase = createClient(
-        cfg.SUPABASE_URL,
-        cfg.SUPABASE_ANON_KEY
-    );
-
-
-    function escapeHtml(str) {
-
-        return (str || "").replace(
-            /[&<>"']/g,
-            (character) => ({
-
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#39;"
-
-            }[character])
-        );
-
-    }
-
-
-    function initials(name) {
-
-        return (name || "?")
-            .trim()
-            .slice(0, 2)
-            .toUpperCase();
-
-    }
-
-
-    async function loadFeed() {
-
-        const feedEl =
-            document.getElementById("feed");
-
-
-        if (!feedEl) return;
-
-
-        try {
-
-            const { data, error } =
-                await supabase
-                    .from("clips_feed")
-                    .select("*")
-                    .limit(50);
-
-
-            if (error) {
-
-                throw error;
-
-            }
-
-
-            if (!data || data.length === 0) {
-
-                feedEl.innerHTML = `
-
-                    <div class="empty-state">
-
-                        <div class="empty-icon">
-                            ✦
-                        </div>
-
-                        <h3>
-                            No clips yet
-                        </h3>
-
-                        <p>
-                            Be the first to save something.
-                        </p>
-
-                    </div>
-
-                `;
-
-                return;
-
-            }
-
-
-            feedEl.innerHTML =
-                data.map((clip) => `
-
-                    <a
-                        class="feed-item"
-                        href="clip.html?slug=${encodeURIComponent(
-                            clip.slug
-                        )}"
-                    >
-
-                        <article class="community-card">
-
-                            <div class="author-row">
-
-                                <span class="avatar">
-
-                                    ${initials(
-                                        clip.author_display_name ||
-                                        clip.author_username
-                                    )}
-
-                                </span>
-
-
-                                <div>
-
-                                    <strong>
-                                        ${escapeHtml(
-                                            clip.author_display_name ||
-                                            clip.author_username
-                                        )}
-                                    </strong>
-
-                                    <small>
-                                        ${new Date(
-                                            clip.created_at
-                                        ).toLocaleDateString()}
-                                    </small>
-
-                                </div>
-
-                            </div>
-
-
-                            <blockquote>
-
-                                “${escapeHtml(
-                                    (
-                                        clip.quoted_text ||
-                                        ""
-                                    ).slice(0, 220)
-                                )}${(
-                                    clip.quoted_text ||
-                                    ""
-                                ).length > 220 ? "…" : ""}”
-
-                            </blockquote>
-
-
-                            ${
-                                clip.commentary
-                                    ? `
-                                    <p class="community-comment">
-                                        ${escapeHtml(
-                                            clip.commentary.slice(
-                                                0,
-                                                180
-                                            )
-                                        )}
-                                    </p>
-                                    `
-                                    : ""
-                            }
-
-
-                            <div class="community-source">
-
-                                <span>
-                                    ↗
-                                </span>
-
-                                ${
-                                    escapeHtml(
-                                        clip.source_domain ||
-                                        "Web"
-                                    )
-                                }
-
-                            </div>
-
-                        </article>
-
-                    </a>
-
-                `).join("");
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "ClipNoter feed error:",
-                error
-            );
-
-
-            feedEl.innerHTML = `
-
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-                        !
-                    </div>
-
-                    <h3>
-                        The library is unavailable
-                    </h3>
-
-                    <p>
-                        Try again in a moment.
-                    </p>
-
-                </div>
-
-            `;
-
-        }
-
-    }
-
-
-    loadFeed();
-
+const supabase = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+
+function escapeHtml(str) {
+  return (str || "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+function formatClipTime(totalSeconds) {
+  const s = Math.max(0, Math.floor(Number(totalSeconds) || 0));
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+  return `${m}:${String(r).padStart(2, "0")}`;
 }
 
-</script>
-<script>
-(() => {
-    "use strict";
+async function loadFeed() {
+  const el = document.getElementById("feed");
+  const { data, error } = await supabase
+    .from("clips_feed")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(6);
 
-    const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-    ).matches;
+  if (error) {
+    el.innerHTML = `<p class="feed-state">Couldn't load recent activity.</p>`;
+    return;
+  }
+  if (!data || data.length === 0) {
+    el.innerHTML = `<p class="feed-state">No clips yet — be the first to share one.</p>`;
+    return;
+  }
 
-    const revealEls = Array.from(document.querySelectorAll(".reveal"));
+  el.innerHTML = data.map((c) => {
+    const isVideo = c.clip_type === "video";
+    const body = isVideo
+      ? `<span class="activity-video-tag">▶ ${formatClipTime(c.video_start_seconds)} – ${formatClipTime(c.video_end_seconds)}</span><p>${escapeHtml(c.commentary || "video clip")}</p>`
+      : `<p>"${escapeHtml((c.quoted_text || "").slice(0, 140))}${(c.quoted_text || "").length > 140 ? "…" : ""}"</p>`;
+    const dateStr = new Date(c.created_at).toLocaleDateString("en-US", { month: "short", day: "2-digit" }).toUpperCase();
+    return `
+      <a class="activity-entry" href="clip.html?slug=${encodeURIComponent(c.slug)}">
+        <div class="activity-date">${dateStr}<span class="op">@${escapeHtml(c.author_username || "someone")}</span></div>
+        <div class="activity-body">${body}</div>
+        <div class="activity-meta">${isVideo ? "Video clip" : "Text clip"}<span class="src">${escapeHtml(c.source_domain || "web")}</span></div>
+      </a>
+    `;
+  }).join("");
+}
 
-    if (prefersReducedMotion) {
-        revealEls.forEach((el) => el.classList.add("is-visible"));
-    } else if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                for (const entry of entries) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("is-visible");
-                        observer.unobserve(entry.target);
-                    }
-                }
-            },
-            {
-                threshold: 0.15,
-                rootMargin: "0px 0px -40px 0px"
-            }
-        );
-
-        revealEls.forEach((el) => observer.observe(el));
-    } else {
-        revealEls.forEach((el) => el.classList.add("is-visible"));
-    }
-
-    const header = document.querySelector(".site-header");
-    if (header) {
-        const updateHeaderState = () => {
-            header.classList.toggle("scrolled", window.scrollY > 10);
-        };
-        updateHeaderState();
-        window.addEventListener("scroll", updateHeaderState, { passive: true });
-    }
-})();
+loadFeed();
 </script>
 
 </body>
