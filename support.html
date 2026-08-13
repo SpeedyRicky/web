@@ -1,136 +1,10 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ClipNoter clip</title>
-<link rel="stylesheet" href="clip.css" />
-</head>
-<body>
-  <header class="site-header">
-    <a class="brand" href="index.html"><span class="mark">“</span>ClipNoter</a>
-    <a href="index.html" class="btn primary">Browse feed</a>
-  </header>
-  <div class="container" id="container">
-    <p class="empty">Loading…</p>
-  </div>
-
-  <dialog id="claim-dialog" class="claim-dialog">
-    <div class="dialog-inner">
-      <h3>File a claim</h3>
-      <p style="color:#777;font-size:13px;">If you're the original creator or rights holder and believe this clip should be reviewed or removed, tell us below.</p>
-      <div class="field"><label>Your name</label><input id="claim-name" type="text" /></div>
-      <div class="field"><label>Email</label><input id="claim-email" type="email" /></div>
-      <div class="field"><label>Reason</label><textarea id="claim-reason" rows="4" placeholder="Explain the issue…"></textarea></div>
-      <p id="claim-error" class="empty" style="display:none;color:#dc2626;padding:0;"></p>
-      <div class="dialog-actions">
-        <button class="btn" id="claim-cancel">Cancel</button>
-        <button class="btn primary" id="claim-submit">Submit claim</button>
-      </div>
-    </div>
-  </dialog>
-
-  <script src="config.js"></script>
-  <script type="module" src="clip.js"></script>
-</body>
-</html> -->
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ClipNote clip</title>
-<meta name="theme-color" content="#080a0f">
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="clip.css">
-<link rel="shortcut icon" href="icon.png" type="image/x-icon">
-</head>
-<body>
-
-<header class="site-header">
-
-<div class="header-inner">
-
-    <a class="brand" href="index.html" aria-label="ClipNote home">
-        <span class="brand-icon">"</span>
-        <span>ClipNote</span>
-    </a>
-
-    <nav class="nav-links" aria-label="Main navigation">
-        <a href="index.html#feed">Browse feed</a>
-    </nav>
-
-</div>
-
-</header>
-
-<main>
-
-<div class="container" id="container">
-    <p class="empty">Loading…</p>
-</div>
-
-</main>
-
-<footer>
-
-<div class="footer-brand">
-    <a class="brand" href="index.html">
-        <span class="brand-icon">"</span>
-        ClipNote
-    </a>
-    <p>
-        Commentary on the internet,
-        always linked back to its source.
-    </p>
-</div>
-
-<div class="footer-links">
-    <a href="index.html#feed">Explore</a>
-    <a href="privacy.html">Privacy</a>
-    <a
-        href="https://chromewebstore.google.com/detail/clipnoter-%E2%80%94-clip-comment/coflhhkdefdhkealolkmfpgpkkljlkoi"
-        target="_blank"
-        rel="noopener noreferrer"
-    >
-        Extension
-    </a>
-</div>
-
-<div class="footer-bottom">
-    © 2026 ClipNote. Built for better notes on the web.
-</div>
-
-</footer>
-
-<dialog id="claim-dialog" class="claim-dialog">
-  <div class="dialog-inner">
-    <h3>File a claim</h3>
-    <p class="dialog-subtext">If you're the original creator or rights holder and believe this clip should be reviewed or removed, tell us below.</p>
-    <div class="field"><label>Your name</label><input id="claim-name" type="text" /></div>
-    <div class="field"><label>Email</label><input id="claim-email" type="email" /></div>
-    <div class="field"><label>Reason</label><textarea id="claim-reason" rows="4" placeholder="Explain the issue…"></textarea></div>
-    <p id="claim-error" class="empty claim-error" style="display:none;"></p>
-    <div class="dialog-actions">
-      <button class="btn secondary" id="claim-cancel">Cancel</button>
-      <button class="btn primary" id="claim-submit">Submit claim</button>
-    </div>
-  </div>
-</dialog>
-
-<script src="config.js"></script>
-<script type="module" src="clip.js"></script>
-</body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ClipNoter clip</title>
-<meta name="description" content="A single clip from ClipNoter — captured text or video, wired back to its source.">
+<title>Support — ClipNoter</title>
+<meta name="description" content="How to install ClipNoter, capture your first clip, and get the most out of it.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,500&family=Fraunces:ital,wght@0,500;0,600;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -181,27 +55,77 @@
 </header>
 
 <main>
-  <div class="wrap clip-view">
-    <div id="container">
-      <p class="clip-not-found">Loading…</p>
-    </div>
-  </div>
-</main>
 
-<dialog id="claim-dialog" class="claim-dialog">
-  <div class="claim-dialog-inner">
-    <h3>File a claim</h3>
-    <p class="claim-dialog-subtext">If you're the original creator or rights holder and believe this clip should be reviewed or removed, tell us below.</p>
-    <div class="claim-field"><label for="claim-name">Your name</label><input id="claim-name" type="text" /></div>
-    <div class="claim-field"><label for="claim-email">Email</label><input id="claim-email" type="email" /></div>
-    <div class="claim-field"><label for="claim-reason">Reason</label><textarea id="claim-reason" rows="4" placeholder="Explain the issue…"></textarea></div>
-    <p id="claim-error" class="claim-error" style="display:none;"></p>
-    <div class="claim-actions">
-      <button class="btn btn-ghost" id="claim-cancel" type="button">Cancel</button>
-      <button class="btn btn-primary" id="claim-submit" type="button">Submit claim</button>
+<section class="wrap doc-hero">
+  <span class="eyebrow">Support</span>
+  <h1 class="display">Get the most out of ClipNoter.</h1>
+  <p class="lede">A short guide to installing the extension and capturing your first clip, plus a few things worth knowing.</p>
+</section>
+
+<div class="wrap doc-layout">
+
+  <nav class="doc-toc" aria-label="Support sections">
+    <div class="doc-toc-title">On this page</div>
+    <a href="#guide">Guide</a>
+    <a href="#learn">Learn</a>
+  </nav>
+
+  <article>
+    <div class="doc-card">
+
+      <section id="guide">
+        <h2>Guide</h2>
+        <p>Everything you need to go from installing the extension to publishing your first clip.</p>
+
+        <h3>1. Install the extension</h3>
+        <p>Get ClipNoter from the Chrome Web Store and pin it to your toolbar. No account is required to install it or to start clipping privately.</p>
+
+        <h3>2. Capture a text clip</h3>
+        <p>Highlight any passage on a page, then click the ClipNoter icon that appears next to your selection. Add your own note if you want context for later, and save.</p>
+
+        <h3>3. Capture a video clip</h3>
+        <p>On a supported video platform, open the ClipNoter panel while the video is playing. Mark an in point and an out point, and ClipNoter saves the timestamped range rather than a screenshot — the source link jumps straight back to that moment.</p>
+
+        <h3>4. Publish or keep it private</h3>
+        <p>Every clip gets its own page automatically. Choose whether to list it in the public feed, or keep it as a private note only you can see.</p>
+
+        <h3>5. Comment on a clip</h3>
+        <p>Comments require signing in. Enter your email on the clip's page and we'll send you a magic link — no password to remember, and clicking it signs you in on that device.</p>
+
+        <div class="doc-notice">
+          <strong>Stuck on something?</strong>
+          Most install and capture issues are covered in <a href="index.html#faq">the FAQ</a>. If yours isn't, use the contact link at the bottom of this page.
+        </div>
+      </section>
+
+      <section id="learn">
+        <h2>Learn</h2>
+        <p>A few things that make ClipNoter more useful once you're past the basics.</p>
+
+        <h3>Where ClipNoter works today</h3>
+        <p>YouTube, Udemy, and Vimeo have native video timestamping support. Text clipping works on any page. See <a href="index.html#platforms">Platforms</a> for what's coming next.</p>
+
+        <h3>Source links stay live</h3>
+        <p>Every clip keeps a link back to where it came from — a video clip's link jumps to the exact timestamp on supported platforms, so context is never more than one click away.</p>
+
+        <h3>Search finds what you said, not just where</h3>
+        <p>Because ClipNoter saves the exact wording and your own notes, search works on meaning and phrasing — not just the tab or folder you happened to save something in.</p>
+
+        <h3>If something's clipped without permission</h3>
+        <p>Use "File a claim" on the clip in question. Our full process, including timelines and counter-notices, is in the <a href="privacy.html#changes">DMCA policy</a>.</p>
+
+        <div class="doc-contact">
+          <strong>Still need help?</strong>
+          <p style="margin-top:7px;">Replace the placeholder below with your real support email before publishing.</p>
+          <a href="mailto:careercapital41@gmail.com">careercapital41@gmail.com</a>
+        </div>
+      </section>
+
     </div>
-  </div>
-</dialog>
+  </article>
+
+</div>
+</main>
 
 <footer>
   <div class="wrap footer-grid">
@@ -299,36 +223,6 @@
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll, { passive: true });
-
-  var revealEls = document.querySelectorAll("[data-reveal]");
-  if ("IntersectionObserver" in window && revealEls.length) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) entry.target.classList.add("in-view");
-        else entry.target.classList.remove("in-view");
-      });
-    }, { threshold: 0.25 });
-    revealEls.forEach(function (el) { io.observe(el); });
-  } else {
-    revealEls.forEach(function (el) { el.classList.add("in-view"); });
-  }
-
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  if (!reduceMotion) {
-    document.body.addEventListener("mousemove", function (e) {
-      var card = e.target.closest(".clip-card");
-      if (!card) return;
-      var r = card.getBoundingClientRect();
-      var x = (e.clientX - r.left) / r.width - 0.5;
-      var y = (e.clientY - r.top) / r.height - 0.5;
-      card.style.transform = "perspective(800px) rotateY(" + (x * 6) + "deg) rotateX(" + (-y * 6) + "deg)";
-    });
-    document.body.addEventListener("mouseout", function (e) {
-      var card = e.target.closest(".clip-card");
-      if (card && !card.contains(e.relatedTarget)) card.style.transform = "";
-    });
-  }
 })();
 </script>
 
@@ -549,9 +443,6 @@
   }
 })();
 </script>
-
-<script src="config.js"></script>
-<script type="module" src="clip.js"></script>
 
 </body>
 </html>

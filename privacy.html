@@ -1,1020 +1,572 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Privacy Policy — ClipNote</title>
-
-<meta
-    name="description"
-    content="Learn how ClipNoter handles your notes, webpage information, and privacy."
->
-<link rel="shortcut icon" href="icon.png" type="image/x-icon">
-<meta name="theme-color" content="#0b0d12">
-
-<style>
-    :root {
-        --bg: #080a0f;
-        --surface: rgba(255, 255, 255, 0.055);
-        --surface-hover: rgba(255, 255, 255, 0.075);
-        --border: rgba(255, 255, 255, 0.10);
-        --text: #f7f8fb;
-        --muted: #a7adba;
-        --accent: #7c5cff;
-        --accent-2: #5ee7df;
-        --success: #5ee7a1;
-        --max-width: 920px;
-    }
-
-    * {
-        box-sizing: border-box;
-    }
-
-    html {
-        scroll-behavior: smooth;
-    }
-
-    body {
-        margin: 0;
-        min-height: 100vh;
-
-        font-family:
-            Inter,
-            ui-sans-serif,
-            system-ui,
-            -apple-system,
-            BlinkMacSystemFont,
-            "Segoe UI",
-            sans-serif;
-
-        color: var(--text);
-
-        background:
-            radial-gradient(
-                circle at 15% 0%,
-                rgba(124, 92, 255, 0.18),
-                transparent 32%
-            ),
-            radial-gradient(
-                circle at 85% 10%,
-                rgba(94, 231, 223, 0.10),
-                transparent 28%
-            ),
-            var(--bg);
-
-        line-height: 1.7;
-    }
-
-    a {
-        color: inherit;
-    }
-
-    /* ---------- HEADER ---------- */
-
-    .site-header {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-
-        background: rgba(8, 10, 15, 0.78);
-        border-bottom: 1px solid var(--border);
-    }
-
-    .header-inner {
-        width: min(100% - 40px, var(--max-width));
-        margin: 0 auto;
-
-        min-height: 70px;
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-    }
-
-    .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-
-        text-decoration: none;
-        font-weight: 800;
-        font-size: 19px;
-        letter-spacing: -0.03em;
-    }
-
-    .brand-icon {
-        width: 34px;
-        height: 34px;
-
-        display: grid;
-        place-items: center;
-
-        border-radius: 10px;
-
-        background:
-            linear-gradient(
-                135deg,
-                var(--accent),
-                var(--accent-2)
-            );
-
-        color: white;
-        font-size: 18px;
-
-        box-shadow:
-            0 8px 30px rgba(124, 92, 255, 0.28);
-    }
-
-    .back-link {
-        color: var(--muted);
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 600;
-
-        transition: color 0.2s ease;
-    }
-
-    .back-link:hover {
-        color: white;
-    }
-
-    /* ---------- HERO ---------- */
-
-    .hero {
-        width: min(100% - 40px, var(--max-width));
-        margin: 0 auto;
-
-        padding: 85px 0 55px;
-    }
-
-    .eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-
-        padding: 7px 12px;
-
-        border: 1px solid rgba(94, 231, 223, 0.18);
-        border-radius: 999px;
-
-        background: rgba(94, 231, 223, 0.06);
-
-        color: #a9fff7;
-
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-    }
-
-    .eyebrow-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: var(--success);
-        box-shadow: 0 0 12px rgba(94, 231, 161, 0.8);
-    }
-
-    h1 {
-        max-width: 760px;
-
-        margin: 22px 0 15px;
-
-        font-size: clamp(42px, 7vw, 72px);
-        line-height: 1.02;
-        letter-spacing: -0.055em;
-    }
-
-    .hero-description {
-        max-width: 680px;
-
-        margin: 0;
-
-        color: var(--muted);
-        font-size: 18px;
-    }
-
-    .updated {
-        margin-top: 24px;
-
-        color: #747b89;
-        font-size: 13px;
-    }
-
-    /* ---------- LAYOUT ---------- */
-
-    .page-layout {
-        width: min(100% - 40px, var(--max-width));
-        margin: 0 auto 100px;
-
-        display: grid;
-        grid-template-columns: 210px minmax(0, 1fr);
-        gap: 45px;
-    }
-
-    .toc {
-        position: sticky;
-        top: 100px;
-        align-self: start;
-    }
-
-    .toc-title {
-        margin-bottom: 12px;
-
-        color: #747b89;
-
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-    }
-
-    .toc a {
-        display: block;
-
-        padding: 7px 0;
-
-        color: var(--muted);
-
-        font-size: 13px;
-        text-decoration: none;
-
-        transition:
-            color 0.2s ease,
-            transform 0.2s ease;
-    }
-
-    .toc a:hover {
-        color: white;
-        transform: translateX(3px);
-    }
-
-    /* ---------- CONTENT ---------- */
-
-    .content {
-        min-width: 0;
-    }
-
-    .privacy-card {
-        padding: clamp(25px, 5vw, 45px);
-
-        border: 1px solid var(--border);
-        border-radius: 24px;
-
-        background:
-            linear-gradient(
-                180deg,
-                rgba(255, 255, 255, 0.055),
-                rgba(255, 255, 255, 0.025)
-            );
-
-        box-shadow:
-            0 25px 80px rgba(0, 0, 0, 0.28);
-    }
-
-    section {
-        scroll-margin-top: 100px;
-    }
-
-    section + section {
-        margin-top: 55px;
-        padding-top: 55px;
-
-        border-top: 1px solid var(--border);
-    }
-
-    h2 {
-        margin: 0 0 15px;
-
-        font-size: 25px;
-        line-height: 1.2;
-        letter-spacing: -0.025em;
-    }
-
-    h3 {
-        margin: 28px 0 8px;
-
-        font-size: 17px;
-    }
-
-    p {
-        margin: 0 0 15px;
-        color: #c5c9d2;
-    }
-
-    ul {
-        margin: 14px 0 0;
-        padding-left: 22px;
-
-        color: #c5c9d2;
-    }
-
-    li {
-        margin: 9px 0;
-    }
-
-    strong {
-        color: white;
-    }
-
-    /* ---------- TRUST CARDS ---------- */
-
-    .privacy-summary {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-
-        margin: 25px 0 45px;
-    }
-
-    .summary-card {
-        padding: 18px;
-
-        border: 1px solid var(--border);
-        border-radius: 16px;
-
-        background: rgba(255, 255, 255, 0.035);
-    }
-
-    .summary-icon {
-        font-size: 22px;
-        margin-bottom: 9px;
-    }
-
-    .summary-card strong {
-        display: block;
-        margin-bottom: 4px;
-
-        font-size: 14px;
-    }
-
-    .summary-card span {
-        display: block;
-
-        color: var(--muted);
-        font-size: 12px;
-        line-height: 1.5;
-    }
-
-    /* ---------- NOTICE ---------- */
-
-    .notice {
-        margin: 25px 0;
-
-        padding: 18px 20px;
-
-        border-left: 3px solid var(--accent);
-
-        border-radius: 0 14px 14px 0;
-
-        background:
-            rgba(124, 92, 255, 0.08);
-
-        color: #d9d5ff;
-    }
-
-    .notice strong {
-        display: block;
-        margin-bottom: 4px;
-    }
-
-    /* ---------- DATA TABLE ---------- */
-
-    .data-table {
-        overflow-x: auto;
-
-        margin-top: 20px;
-
-        border: 1px solid var(--border);
-        border-radius: 14px;
-    }
-
-    table {
-        width: 100%;
-        min-width: 600px;
-
-        border-collapse: collapse;
-    }
-
-    th,
-    td {
-        padding: 14px 16px;
-
-        border-bottom: 1px solid var(--border);
-
-        text-align: left;
-        vertical-align: top;
-
-        font-size: 13px;
-    }
-
-    th {
-        color: white;
-        background: rgba(255, 255, 255, 0.045);
-
-        font-size: 12px;
-    }
-
-    td {
-        color: var(--muted);
-    }
-
-    tr:last-child td {
-        border-bottom: none;
-    }
-
-    /* ---------- CONTACT ---------- */
-
-    .contact-box {
-        margin-top: 22px;
-        padding: 22px;
-
-        border: 1px solid rgba(124, 92, 255, 0.25);
-        border-radius: 17px;
-
-        background:
-            linear-gradient(
-                135deg,
-                rgba(124, 92, 255, 0.10),
-                rgba(94, 231, 223, 0.04)
-            );
-    }
-
-    .contact-box a {
-        color: #bcb0ff;
-        font-weight: 700;
-        text-decoration: none;
-    }
-
-    .contact-box a:hover {
-        text-decoration: underline;
-    }
-
-    /* ---------- FOOTER ---------- */
-
-    footer {
-        width: min(100% - 40px, var(--max-width));
-        margin: 0 auto;
-
-        padding: 30px 0 55px;
-
-        border-top: 1px solid var(--border);
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-
-        color: #6f7684;
-        font-size: 12px;
-    }
-
-    footer a {
-        color: #9a91d8;
-        text-decoration: none;
-    }
-
-    footer a:hover {
-        text-decoration: underline;
-    }
-
-    /* ---------- MOBILE ---------- */
-
-    @media (max-width: 760px) {
-
-        .header-inner,
-        .hero,
-        .page-layout,
-        footer {
-            width: min(100% - 28px, var(--max-width));
-        }
-
-        .hero {
-            padding-top: 55px;
-        }
-
-        .page-layout {
-            display: block;
-        }
-
-        .toc {
-            position: static;
-
-            margin-bottom: 25px;
-            padding: 16px;
-
-            border: 1px solid var(--border);
-            border-radius: 15px;
-
-            background: rgba(255, 255, 255, 0.035);
-        }
-
-        .toc a {
-            display: inline-block;
-            margin-right: 15px;
-        }
-
-        .privacy-summary {
-            grid-template-columns: 1fr;
-        }
-
-        .privacy-card {
-            border-radius: 18px;
-        }
-
-        footer {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        html {
-            scroll-behavior: auto;
-        }
-
-        * {
-            transition: none !important;
-        }
-    }
-</style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — ClipNoter</title>
+<meta name="description" content="Learn how ClipNoter handles your notes, webpage information, and privacy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,500&family=Fraunces:ital,wght@0,500;0,600;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
-<header class="site-header">
-    <div class="header-inner">
+<canvas id="cn-bg3d" aria-hidden="true"></canvas>
 
-    <a class="brand" href="index.html" aria-label="ClipNote home">
-        <span class="brand-icon">“</span>
-        ClipNoter
-    </a>
-
-    <a class="back-link" href="index.html">
-        ← Back to ClipNoter
-    </a>
-
+<div id="cn-floattext" aria-hidden="true">
+  <span style="top:10%; left:7%; font-family:var(--font-display); font-style:italic; font-size:22px; animation-duration:26s; animation-delay:-4s; --float-dx:10px; --float-dy:-22px; --float-rot:-3deg;">keep the source</span>
+  <span style="top:20%; left:80%; font-family:var(--font-mono); font-size:13px; animation-duration:31s; animation-delay:-11s; --float-dx:-12px; --float-dy:18px; --float-rot:2deg;">0:18:42</span>
+  <span style="top:36%; left:60%; font-family:var(--font-display); font-style:italic; font-size:28px; animation-duration:23s; animation-delay:-6s; --float-dx:16px; --float-dy:-14px; --float-rot:-1.5deg;">annotate</span>
+  <span style="top:50%; left:12%; font-family:var(--font-mono); font-size:14px; animation-duration:29s; animation-delay:-16s; --float-dx:-10px; --float-dy:-20px; --float-rot:3deg;">#research</span>
+  <span style="top:63%; left:70%; font-family:var(--font-display); font-style:italic; font-size:20px; animation-duration:34s; animation-delay:-9s; --float-dx:12px; --float-dy:16px; --float-rot:-2deg;">the exact wording</span>
+  <span style="top:74%; left:30%; font-family:var(--font-mono); font-size:13px; animation-duration:27s; animation-delay:-2s; --float-dx:-14px; --float-dy:-16px; --float-rot:2.5deg;">source lock</span>
+  <span style="top:85%; left:52%; font-family:var(--font-display); font-style:italic; font-size:24px; animation-duration:24s; animation-delay:-13s; --float-dx:10px; --float-dy:-18px; --float-rot:-2.5deg;">archived</span>
+  <span style="top:6%; left:48%; font-family:var(--font-mono); font-size:12px; animation-duration:32s; animation-delay:-20s; --float-dx:-8px; --float-dy:20px; --float-rot:1.5deg;">youtube.com</span>
+  <span style="top:44%; left:88%; font-family:var(--font-display); font-style:italic; font-size:20px; animation-duration:22s; animation-delay:-8s; --float-dx:-16px; --float-dy:-14px; --float-rot:3deg;">retrieve</span>
+  <span style="top:93%; left:9%; font-family:var(--font-mono); font-size:12px; animation-duration:28s; animation-delay:-18s; --float-dx:14px; --float-dy:-12px; --float-rot:-2deg;">wired back to the source</span>
 </div>
 
+<div id="cn-cursor-glow" aria-hidden="true"></div>
+
+<div class="reveal-page">
+
+<div class="progress-rail" aria-hidden="true"><span id="progress-fill"></span></div>
+
+<header>
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html#top">
+      <span class="brand-mark">C</span>
+      <span class="brand-name">ClipNoter</span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html#sequence">How it works</a>
+      <a href="index.html#systems">Features</a>
+      <a href="index.html#platforms">Platforms</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="index.html#log">Activity</a>
+    </nav>
+    <div class="theme-toggle" id="theme-toggle" role="group" aria-label="Theme">
+      <button type="button" class="theme-btn" data-theme-choice="light">Light</button>
+      <button type="button" class="theme-btn" data-theme-choice="dark">Dark</button>
+      <button type="button" class="theme-btn" data-theme-choice="auto" aria-pressed="true">Auto</button>
+    </div>
+  </div>
 </header>
 
 <main>
 
-<section class="hero">
-
-    <span class="eyebrow">
-        <span class="eyebrow-dot"></span>
-        Privacy first
-    </span>
-
-    <h1>
-        Your notes are yours.
-    </h1>
-
-    <p class="hero-description">
-        This page explains what information ClipNoter handles,
-        why it is used, and what choices you have over your data.
-    </p>
-
-    <p class="updated">
-        Last updated: August 8, 2026
-    </p>
-
+<section class="wrap doc-hero">
+  <span class="eyebrow">Privacy first</span>
+  <h1 class="display">Your notes are yours.</h1>
+  <p class="lede">This page explains what information ClipNoter handles, why it is used, and what choices you have over your data.</p>
+  <p class="doc-updated">Last updated: August 8, 2026</p>
 </section>
 
+<div class="wrap doc-layout">
 
-<div class="page-layout">
+  <nav class="doc-toc" aria-label="Privacy policy sections">
+    <div class="doc-toc-title">On this page</div>
+    <a href="#overview">Overview</a>
+    <a href="#information">Information</a>
+    <a href="#usage">How we use it</a>
+    <a href="#webpages">Webpage access</a>
+    <a href="#sharing">Data sharing</a>
+    <a href="#security">Security</a>
+    <a href="#choices">Your choices</a>
+    <a href="#changes">DMCA policy</a>
+    <a href="#contact">Contact</a>
+  </nav>
 
-    <nav class="toc" aria-label="Privacy policy sections">
+  <article>
+    <div class="doc-card">
 
-        <div class="toc-title">
-            On this page
+      <div class="doc-highlights">
+        <div class="doc-highlight">
+          <div class="doc-highlight-mark">⚿</div>
+          <strong>Your control</strong>
+          <span>You control the content you create and save.</span>
         </div>
-
-        <a href="#overview">Overview</a>
-        <a href="#information">Information</a>
-        <a href="#usage">How we use it</a>
-        <a href="#webpages">Webpage access</a>
-        <a href="#sharing">Data sharing</a>
-        <a href="#security">Security</a>
-        <a href="#choices">Your choices</a>
-        <a href="#changes">Changes</a>
-        <a href="#contact">Contact</a>
-
-    </nav>
-
-
-    <article class="content">
-
-        <div class="privacy-card">
-
-            <div class="privacy-summary">
-
-                <div class="summary-card">
-                    <div class="summary-icon">🔒</div>
-                    <strong>Your control</strong>
-                    <span>
-                        You control the content you create and save.
-                    </span>
-                </div>
-
-                <div class="summary-card">
-                    <div class="summary-icon">🌐</div>
-                    <strong>Web access</strong>
-                    <span>
-                        Webpage information is accessed when needed for ClipNoter features.
-                    </span>
-                </div>
-
-                <div class="summary-card">
-                    <div class="summary-icon">🚫</div>
-                    <strong>No selling</strong>
-                    <span>
-                        We do not sell your personal information.
-                    </span>
-                </div>
-
-            </div>
-
-
-            <section id="overview">
-
-                <h2>1. Overview</h2>
-
-                <p>
-                    ClipNoter helps you save, annotate, organize, and
-                    revisit useful information from the web.
-                </p>
-
-                <p>
-                    We designed ClipNoter to make your data practices
-                    understandable. This Privacy Policy explains what
-                    information may be processed when you use ClipNoter
-                    and how that information is used.
-                </p>
-
-                <div class="notice">
-                    <strong>In simple terms</strong>
-                    ClipNoter only uses information that is necessary
-                    to provide the features you choose to use.
-                </div>
-
-            </section>
-
-
-            <section id="information">
-
-                <h2>2. Information We Handle</h2>
-
-                <p>
-                    Depending on the features you use, ClipNoter may
-                    process the following information:
-                </p>
-
-                <div class="data-table">
-
-                    <table>
-
-                        <thead>
-                            <tr>
-                                <th>Information</th>
-                                <th>Why it may be needed</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-
-                            <tr>
-                                <td>Account information</td>
-                                <td>
-                                    To authenticate users and provide
-                                    account-related functionality.
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>Notes and annotations</td>
-                                <td>
-                                    To save and display the content
-                                    you create.
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>Selected webpage text</td>
-                                <td>
-                                    To create the clip or annotation
-                                    you explicitly request.
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>Webpage URL and title</td>
-                                <td>
-                                    To identify and link your saved
-                                    content back to its source.
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>AI-generated content</td>
-                                <td>
-                                    To provide AI features when you
-                                    explicitly request them.
-                                </td>
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </section>
-
-
-            <section id="usage">
-
-                <h2>3. How We Use Information</h2>
-
-                <p>
-                    Information handled by ClipNoter may be used to:
-                </p>
-
-                <ul>
-                    <li>Provide note-taking and annotation features.</li>
-                    <li>Save and display your clips and notes.</li>
-                    <li>Connect saved notes with their source webpages.</li>
-                    <li>Provide account functionality where applicable.</li>
-                    <li>Generate AI features when you request them.</li>
-                    <li>Maintain and improve the reliability of ClipNoter.</li>
-                </ul>
-
-                <p>
-                    We do not use your information for purposes unrelated
-                    to providing or improving the service unless we
-                    explain that use and, where required, obtain your
-                    permission.
-                </p>
-
-            </section>
-
-
-            <section id="webpages">
-
-                <h2>4. Webpage Access</h2>
-
-                <p>
-                    ClipNoter may access information from a webpage when
-                    you actively use a feature that requires it, such as
-                    creating a clip or annotation.
-                </p>
-
-                <p>
-                    This can include information such as selected text,
-                    the webpage title, and the webpage URL.
-                </p>
-
-                <p>
-                    ClipNoter does not intentionally collect your general
-                    browsing history simply because you visit websites.
-                </p>
-
-            </section>
-
-
-            <section id="sharing">
-
-                <h2>5. Data Sharing</h2>
-
-                <p>
-                    ClipNoter does not sell your personal information.
-                </p>
-
-                <p>
-                    Information may be processed by service providers
-                    that are necessary to operate specific ClipNoter
-                    features, such as authentication, storage, hosting,
-                    or AI functionality.
-                </p>
-
-                <p>
-                    When third-party services are used, information is
-                    shared only as necessary for the relevant feature
-                    and subject to the applicable service's terms and
-                    privacy practices.
-                </p>
-
-            </section>
-
-
-            <section id="security">
-
-                <h2>6. Security</h2>
-
-                <p>
-                    We take reasonable technical and organizational
-                    measures to protect information handled by ClipNoter
-                    against unauthorized access, alteration, disclosure,
-                    or destruction.
-                </p>
-
-                <p>
-                    However, no internet-based service can guarantee
-                    absolute security.
-                </p>
-
-            </section>
-
-
-            <section id="choices">
-
-                <h2>7. Your Choices</h2>
-
-                <p>
-                    Depending on the ClipNoter features you use, you may
-                    be able to:
-                </p>
-
-                <ul>
-                    <li>Delete notes or annotations you created.</li>
-                    <li>Remove saved clips.</li>
-                    <li>Stop using optional AI features.</li>
-                    <li>Remove or disable the ClipNoter extension.</li>
-                    <li>Contact us with questions about your information.</li>
-                </ul>
-
-            </section>
-
-
-            <section id="changes">
-
-                <h2>8. DMCA Policy</h2>
-
-                <p>
-
-
-# ClipMarginal Copyright / DMCA Takedown Policy
-
-*Last updated: [M:8,D:10,Y:2026]*
-
-ClipMarginal ("we," "us," "our") respects the intellectual property rights of
-others and expects users of the ClipMarginal browser extension and feed
-(the "Service") to do the same. We respond to notices of alleged copyright
-infringement that comply with the U.S. Digital Millennium Copyright Act
-("DMCA") and other applicable laws.
-
-## 1. Reporting Claimed Infringement
-
-If you believe that content published through ClipMarginal (a "clip")
-infringes your copyright, you can report it two ways:
-
-- **In-app:** use the "File a claim" option on the clip in question, or
-- **By email/mail:** send a written notice to our Designated Agent, below.
-
-To be effective, a notice must be a written communication that includes
-substantially the following (17 U.S.C. § 512(c)(3)):
-
-1. A physical or electronic signature of a person authorized to act on
-   behalf of the copyright owner.
-2. Identification of the copyrighted work claimed to have been infringed.
-3. Identification of the material you claim is infringing, and information
-   reasonably sufficient to let us locate it (e.g. the clip's URL or the
-   source page it was quoted from).
-4. Your contact information: address, telephone number, and email address.
-5. A statement that you have a good-faith belief that the disputed use is
-   not authorized by the copyright owner, its agent, or the law.
-6. A statement, made under penalty of perjury, that the above information
-   is accurate and that you are the copyright owner or authorized to act
-   on the owner's behalf.
-
-## 2. Designated Agent
-
-Notices of claimed infringement should be sent to:
-
-```
-ClipMarginal DMCA Agent
-Email: [careercapital41@gmail.com]
-Mailing address: [38 Lodge Road, Conception Bay South, Newfoundland, Canada]
-```
-
-*(This agent must also be registered with the U.S. Copyright Office's*
-*Designated Agent Directory at* *[https://dmca.copyright.gov](https://dmca.copyright.gov)* *before this*
-*policy provides safe-harbor protection under 17 U.S.C. § 512.)*
-
-## 3. Our Process
-
-Upon receiving a notice that substantially complies with the requirements
-above, we will:
-
-1. Remove or disable access to the identified clip, typically within
-   1-2 business days.
-2. Notify the user who published the clip that it was removed, and
-   forward a copy of the notice to them.
-3. Document the claim and the action taken.
-
-We reserve the right to remove content that appears to infringe without
-waiting for a complete notice, at our discretion.
-
-## 4. Counter-Notification
-
-If you believe your clip was removed in error or as a result of
-misidentification, you may submit a counter-notice to our Designated Agent
-containing (17 U.S.C. § 512(g)(3)):
-
-1. Your physical or electronic signature.
-2. Identification of the material removed and its location before removal.
-3. A statement under penalty of perjury that you have a good-faith belief
-   the material was removed as a result of mistake or misidentification.
-4. Your name, address, and telephone number, and a statement that you
-   consent to the jurisdiction of the Federal District Court for your
-   district (or, if outside the U.S., any district in which we may be
-   found), and that you will accept service of process from the person
-   who filed the original notice.
-
-If we receive a valid counter-notice, we may reinstate the content in
-10-14 business days unless the original claimant informs us they have
-filed a court action.
-
-## 5. Repeat Infringer Policy
-
-ClipMarginal will, in appropriate circumstances, disable or terminate the
-accounts of users who are determined to be repeat infringers. A user who
-is the subject of two or more valid, unrebutted takedown notices within a
-12-month period is subject to review and possible suspension or
-termination.
-
-## 6. Misrepresentations
-
-Under 17 U.S.C. § 512(f), any person who knowingly materially
-misrepresents that material is infringing, or that it was removed by
-mistake, may be liable for damages.
-
-## 7. Contact
-
-Questions about this policy: [rebeccafolami@gmail.com]
-
-                </p>
-
-            </section>
-
-
-            <section id="contact">
-
-                <h2>9. Contact</h2>
-
-                <p>
-                    If you have questions, concerns, or requests about
-                    ClipNoter's privacy practices, please contact the
-                    ClipNoter team.
-                </p>
-
-                <div class="contact-box">
-
-                    <strong>
-                        Privacy questions?
-                    </strong>
-
-                    <p style="margin-top: 7px;">
-                        Replace the placeholder below with your real
-                        privacy/support email before publishing.
-                    </p>
-
-                    <a href="mailto:careercapital41@gmail.com">
-                        careercapital41@gmail.com
-                    </a>
-
-                    
-                </div>
-
-            </section>
-
+        <div class="doc-highlight">
+          <div class="doc-highlight-mark">⌕</div>
+          <strong>Web access</strong>
+          <span>Webpage information is accessed when needed for ClipNoter features.</span>
         </div>
+        <div class="doc-highlight">
+          <div class="doc-highlight-mark">⊘</div>
+          <strong>No selling</strong>
+          <span>We do not sell your personal information.</span>
+        </div>
+      </div>
 
-    </article>
+      <section id="overview">
+        <h2>1. Overview</h2>
+        <p>ClipNoter helps you save, annotate, organize, and revisit useful information from the web.</p>
+        <p>We designed ClipNoter to make your data practices understandable. This Privacy Policy explains what information may be processed when you use ClipNoter and how that information is used.</p>
+        <div class="doc-notice">
+          <strong>In simple terms</strong>
+          ClipNoter only uses information that is necessary to provide the features you choose to use.
+        </div>
+      </section>
+
+      <section id="information">
+        <h2>2. Information We Handle</h2>
+        <p>Depending on the features you use, ClipNoter may process the following information:</p>
+        <div class="doc-table-wrap">
+          <table>
+            <thead>
+              <tr><th>Information</th><th>Why it may be needed</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Account information</td><td>To authenticate users and provide account-related functionality.</td></tr>
+              <tr><td>Notes and annotations</td><td>To save and display the content you create.</td></tr>
+              <tr><td>Selected webpage text</td><td>To create the clip or annotation you explicitly request.</td></tr>
+              <tr><td>Webpage URL and title</td><td>To identify and link your saved content back to its source.</td></tr>
+              <tr><td>AI-generated content</td><td>To provide AI features when you explicitly request them.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="usage">
+        <h2>3. How We Use Information</h2>
+        <p>Information handled by ClipNoter may be used to:</p>
+        <ul>
+          <li>Provide note-taking and annotation features.</li>
+          <li>Save and display your clips and notes.</li>
+          <li>Connect saved notes with their source webpages.</li>
+          <li>Provide account functionality where applicable.</li>
+          <li>Generate AI features when you request them.</li>
+          <li>Maintain and improve the reliability of ClipNoter.</li>
+        </ul>
+        <p>We do not use your information for purposes unrelated to providing or improving the service unless we explain that use and, where required, obtain your permission.</p>
+      </section>
+
+      <section id="webpages">
+        <h2>4. Webpage Access</h2>
+        <p>ClipNoter may access information from a webpage when you actively use a feature that requires it, such as creating a clip or annotation.</p>
+        <p>This can include information such as selected text, the webpage title, and the webpage URL.</p>
+        <p>ClipNoter does not intentionally collect your general browsing history simply because you visit websites.</p>
+      </section>
+
+      <section id="sharing">
+        <h2>5. Data Sharing</h2>
+        <p>ClipNoter does not sell your personal information.</p>
+        <p>Information may be processed by service providers that are necessary to operate specific ClipNoter features, such as authentication, storage, hosting, or AI functionality.</p>
+        <p>When third-party services are used, information is shared only as necessary for the relevant feature and subject to the applicable service's terms and privacy practices.</p>
+      </section>
+
+      <section id="security">
+        <h2>6. Security</h2>
+        <p>We take reasonable technical and organizational measures to protect information handled by ClipNoter against unauthorized access, alteration, disclosure, or destruction.</p>
+        <p>However, no internet-based service can guarantee absolute security.</p>
+      </section>
+
+      <section id="choices">
+        <h2>7. Your Choices</h2>
+        <p>Depending on the ClipNoter features you use, you may be able to:</p>
+        <ul>
+          <li>Delete notes or annotations you created.</li>
+          <li>Remove saved clips.</li>
+          <li>Stop using optional AI features.</li>
+          <li>Remove or disable the ClipNoter extension.</li>
+          <li>Contact us with questions about your information.</li>
+        </ul>
+      </section>
+
+      <section id="changes">
+        <h2>8. DMCA Policy</h2>
+
+        <h3>ClipNoter Copyright / DMCA Takedown Policy</h3>
+        <p><em>Last updated: August 10, 2026</em></p>
+        <p>ClipNoter ("we," "us," "our") respects the intellectual property rights of others and expects users of the ClipNoter browser extension and feed (the "Service") to do the same. We respond to notices of alleged copyright infringement that comply with the U.S. Digital Millennium Copyright Act ("DMCA") and other applicable laws.</p>
+
+        <h3>1. Reporting Claimed Infringement</h3>
+        <p>If you believe that content published through ClipNoter (a "clip") infringes your copyright, you can report it two ways:</p>
+        <ul>
+          <li><strong>In-app:</strong> use the "File a claim" option on the clip in question, or</li>
+          <li><strong>By email/mail:</strong> send a written notice to our Designated Agent, below.</li>
+        </ul>
+        <p>To be effective, a notice must be a written communication that includes substantially the following (17 U.S.C. § 512(c)(3)):</p>
+        <ol>
+          <li>A physical or electronic signature of a person authorized to act on behalf of the copyright owner.</li>
+          <li>Identification of the copyrighted work claimed to have been infringed.</li>
+          <li>Identification of the material you claim is infringing, and information reasonably sufficient to let us locate it (e.g. the clip's URL or the source page it was quoted from).</li>
+          <li>Your contact information: address, telephone number, and email address.</li>
+          <li>A statement that you have a good-faith belief that the disputed use is not authorized by the copyright owner, its agent, or the law.</li>
+          <li>A statement, made under penalty of perjury, that the above information is accurate and that you are the copyright owner or authorized to act on the owner's behalf.</li>
+        </ol>
+
+        <h3>2. Designated Agent</h3>
+        <p>Notices of claimed infringement should be sent to:</p>
+        <div class="doc-agent-block">
+          ClipNoter DMCA Agent<br>
+          Email: [careercapital41@gmail.com]<br>
+          Mailing address: [38 Lodge Road, Conception Bay South, Newfoundland, Canada]
+        </div>
+        <p><em>(This agent must also be registered with the U.S. Copyright Office's Designated Agent Directory at <a href="https://dmca.copyright.gov" target="_blank" rel="noopener">https://dmca.copyright.gov</a> before this policy provides safe-harbor protection under 17 U.S.C. § 512.)</em></p>
+
+        <h3>3. Our Process</h3>
+        <p>Upon receiving a notice that substantially complies with the requirements above, we will:</p>
+        <ol>
+          <li>Remove or disable access to the identified clip, typically within 1-2 business days.</li>
+          <li>Notify the user who published the clip that it was removed, and forward a copy of the notice to them.</li>
+          <li>Document the claim and the action taken.</li>
+        </ol>
+        <p>We reserve the right to remove content that appears to infringe without waiting for a complete notice, at our discretion.</p>
+
+        <h3>4. Counter-Notification</h3>
+        <p>If you believe your clip was removed in error or as a result of misidentification, you may submit a counter-notice to our Designated Agent containing (17 U.S.C. § 512(g)(3)):</p>
+        <ol>
+          <li>Your physical or electronic signature.</li>
+          <li>Identification of the material removed and its location before removal.</li>
+          <li>A statement under penalty of perjury that you have a good-faith belief the material was removed as a result of mistake or misidentification.</li>
+          <li>Your name, address, and telephone number, and a statement that you consent to the jurisdiction of the Federal District Court for your district (or, if outside the U.S., any district in which we may be found), and that you will accept service of process from the person who filed the original notice.</li>
+        </ol>
+        <p>If we receive a valid counter-notice, we may reinstate the content in 10-14 business days unless the original claimant informs us they have filed a court action.</p>
+
+        <h3>5. Repeat Infringer Policy</h3>
+        <p>ClipNoter will, in appropriate circumstances, disable or terminate the accounts of users who are determined to be repeat infringers. A user who is the subject of two or more valid, unrebutted takedown notices within a 12-month period is subject to review and possible suspension or termination.</p>
+
+        <h3>6. Misrepresentations</h3>
+        <p>Under 17 U.S.C. § 512(f), any person who knowingly materially misrepresents that material is infringing, or that it was removed by mistake, may be liable for damages.</p>
+
+        <h3>7. Contact</h3>
+        <p>Questions about this policy: [rebeccafolami@gmail.com]</p>
+      </section>
+
+      <section id="contact">
+        <h2>9. Contact</h2>
+        <p>If you have questions, concerns, or requests about ClipNoter's privacy practices, please contact the ClipNoter team.</p>
+        <div class="doc-contact">
+          <strong>Privacy questions?</strong>
+          <p style="margin-top:7px;">Replace the placeholder below with your real privacy/support email before publishing.</p>
+          <a href="mailto:careercapital41@gmail.com">careercapital41@gmail.com</a>
+        </div>
+      </section>
+
+    </div>
+  </article>
 
 </div>
-
 </main>
 
 <footer>
-
-<span>
-    © 2026 ClipNoter. Built for better notes on the web.
-</span>
-
-<a href="index.html">
-    Back to ClipNoter
-</a>
-
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="index.html#top">
+        <span class="brand-mark">C</span>
+        <span class="brand-name">ClipNoter</span>
+      </a>
+      <p>Capture the things worth keeping from the web.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Product</div>
+      <a href="index.html#sequence">How it works</a>
+      <a href="index.html#systems">Features</a>
+      <a href="index.html#platforms">Platforms</a>
+      <a href="index.html#faq">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">ClipNoter for</div>
+      <a href="index.html#platforms">YouTube</a>
+      <a href="index.html#platforms">Udemy</a>
+      <a href="index.html#platforms">Vimeo</a>
+      <a href="index.html#platforms">Web</a>
+      <a href="index.html#platforms">More platforms</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Legal</div>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Support</div>
+      <a href="support.html#guide">Guide</a>
+      <a href="support.html#learn">Learn</a>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span class="footer-plate">© 2026 CLIPNOTER</span>
+    <a href="https://chromewebstore.google.com/detail/clipnoter-%E2%80%94-clip-comment/coflhhkdefdhkealolkmfpgpkkljlkoi" target="_blank" rel="noopener">Get the extension</a>
+  </div>
 </footer>
+
+</div>
+
+<script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+
+<script>
+(function () {
+  "use strict";
+  var root = document.documentElement;
+  var toggle = document.getElementById("theme-toggle");
+  var buttons = toggle ? toggle.querySelectorAll(".theme-btn") : [];
+
+  function resolve(pref) {
+    if (pref === "auto") return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return pref;
+  }
+  function applyTheme(pref) {
+    root.setAttribute("data-theme", resolve(pref));
+    try { localStorage.setItem("clipnoter-theme-pref", pref); } catch (e) {}
+    buttons.forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-theme-choice") === pref ? "true" : "false");
+    });
+    if (toggle) {
+      toggle.classList.remove("is-switching");
+      void toggle.offsetWidth;
+      toggle.classList.add("is-switching");
+    }
+    window.dispatchEvent(new CustomEvent("clipnoter:theme"));
+  }
+
+  var storedPref = "auto";
+  try { storedPref = localStorage.getItem("clipnoter-theme-pref") || "auto"; } catch (e) {}
+  applyTheme(storedPref);
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () { applyTheme(btn.getAttribute("data-theme-choice")); });
+  });
+
+  var systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+  if (systemDark.addEventListener) {
+    systemDark.addEventListener("change", function () {
+      var pref = "auto";
+      try { pref = localStorage.getItem("clipnoter-theme-pref") || "auto"; } catch (e) {}
+      if (pref === "auto") applyTheme("auto");
+    });
+  }
+
+  function onScroll() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    var fill = document.getElementById("progress-fill");
+    if (fill) fill.style.width = (progress * 100).toFixed(1) + "%";
+  }
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+})();
+</script>
+
+<script>
+(function () {
+  "use strict";
+
+  var canvas = document.getElementById("cn-bg3d");
+  if (!canvas || typeof THREE === "undefined") return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (window.matchMedia("(max-width: 860px)").matches) return;
+
+  var CLIPS = [
+    { time: "00:41", text: "The bottleneck was never compute. It was always attention.", tag: "#research" },
+    { time: "02:13", text: "Ship the smallest thing that teaches you something true.", tag: "#product" },
+    { time: "00:58", text: "A source you can't relink is just a rumor with formatting.", tag: "#notes" },
+    { time: "01:27", text: "Good defaults are a form of respect for the reader's time.", tag: "#design" },
+    { time: "03:04", text: "Every clip is a promise to your future self.", tag: "#archive" },
+    { time: "01:52", text: "Context collapses the moment you copy without the source.", tag: "#writing" }
+  ];
+
+  var INK_SOFT = "#252119";
+  var PAPER = "#EFE3C8";
+  var BRASS_BRIGHT = "#C79A54";
+
+  function themeIsDark() {
+    var attr = document.documentElement.getAttribute("data-theme");
+    if (attr === "dark") return true;
+    if (attr === "light") return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+
+  function roundRectPath(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+    var words = text.split(" ");
+    var line = "";
+    var lines = [];
+    for (var i = 0; i < words.length; i++) {
+      var test = line + words[i] + " ";
+      if (ctx.measureText(test).width > maxWidth && line !== "") {
+        lines.push(line);
+        line = words[i] + " ";
+      } else {
+        line = test;
+      }
+    }
+    lines.push(line);
+    if (lines.length > maxLines) lines = lines.slice(0, maxLines);
+    for (var j = 0; j < lines.length; j++) ctx.fillText(lines[j].trim(), x, y + j * lineHeight);
+    return lines.length;
+  }
+
+  function makeCardTexture(clip) {
+    var w = 512, h = 320;
+    var cvs = document.createElement("canvas");
+    cvs.width = w; cvs.height = h;
+    var ctx = cvs.getContext("2d");
+
+    ctx.save();
+    ctx.shadowColor = "rgba(0,0,0,0.35)";
+    ctx.shadowBlur = 24;
+    ctx.shadowOffsetY = 12;
+    ctx.fillStyle = INK_SOFT;
+    roundRectPath(ctx, 16, 16, w - 32, h - 32, 14);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.strokeStyle = BRASS_BRIGHT;
+    ctx.globalAlpha = 0.55;
+    ctx.lineWidth = 2;
+    roundRectPath(ctx, 16, 16, w - 32, h - 32, 14);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = BRASS_BRIGHT;
+    ctx.font = "600 20px 'Space Mono', monospace";
+    ctx.fillText(clip.time, 40, 64);
+
+    ctx.fillStyle = PAPER;
+    ctx.font = "italic 500 26px Georgia, 'Times New Roman', serif";
+    wrapText(ctx, clip.text, 40, 118, w - 80, 34, 4);
+
+    ctx.fillStyle = BRASS_BRIGHT;
+    ctx.font = "500 16px 'Space Mono', monospace";
+    ctx.fillText(clip.tag, 40, h - 34);
+
+    var tex = new THREE.CanvasTexture(cvs);
+    tex.needsUpdate = true;
+    return tex;
+  }
+
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x131316, 220, 950);
+
+  var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 2000);
+  camera.position.set(0, 0, 480);
+
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+  renderer.setClearColor(0x000000, 0);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  var group = new THREE.Group();
+  scene.add(group);
+
+  var cards = [];
+  var CARD_COUNT = 8;
+
+  function placeCard(mesh) {
+    mesh.position.set(
+      (Math.random() - 0.5) * 1300,
+      (Math.random() - 0.5) * 850,
+      (Math.random() - 0.5) * 650 - 100
+    );
+    mesh.rotation.set((Math.random() - 0.5) * 0.3, (Math.random() - 0.5) * 0.5, (Math.random() - 0.5) * 0.2);
+  }
+
+  for (var i = 0; i < CARD_COUNT; i++) {
+    var clip = CLIPS[i % CLIPS.length];
+    var texture = makeCardTexture(clip);
+    var aspect = 320 / 512;
+    var w = 150;
+    var geo = new THREE.PlaneGeometry(w, w * aspect);
+    var mat = new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: 0.72, depthWrite: false });
+    var mesh = new THREE.Mesh(geo, mat);
+    placeCard(mesh);
+    mesh.userData.driftSeed = Math.random() * Math.PI * 2;
+    mesh.userData.driftSpeed = 0.12 + Math.random() * 0.2;
+    group.add(mesh);
+    cards.push(mesh);
+  }
+
+  var mouse = { x: 0, y: 0 };
+  window.addEventListener("mousemove", function (e) {
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
+  }, { passive: true });
+
+  var lastScrollY = window.scrollY;
+  var scrollVelocity = 0;
+  var smoothedVelocity = 0;
+  window.addEventListener("scroll", function () {
+    var y = window.scrollY;
+    scrollVelocity = y - lastScrollY;
+    lastScrollY = y;
+  }, { passive: true });
+
+  function scrollFraction() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    return max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+  }
+
+  window.addEventListener("resize", function () {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }, { passive: true });
+
+  var running = themeIsDark();
+  var rafId = null;
+  var clock = new THREE.Clock();
+
+  window.addEventListener("clipnoter:theme", function () {
+    var shouldRun = themeIsDark();
+    if (shouldRun && !running) {
+      running = true;
+      clock.start();
+      rafId = requestAnimationFrame(animate);
+    } else if (!shouldRun && running) {
+      running = false;
+      canvas.classList.remove("is-ready");
+      if (rafId) cancelAnimationFrame(rafId);
+    }
+  });
+
+  function animate() {
+    if (!running) return;
+    rafId = requestAnimationFrame(animate);
+    var t = clock.getElapsedTime();
+
+    smoothedVelocity += (scrollVelocity - smoothedVelocity) * 0.08;
+    scrollVelocity *= 0.9;
+
+    for (var i = 0; i < cards.length; i++) {
+      var c = cards[i];
+      var seed = c.userData.driftSeed;
+      var speed = c.userData.driftSpeed;
+      c.position.y += smoothedVelocity * 0.16;
+      c.position.x += Math.sin(t * speed + seed) * 0.05;
+      c.rotation.z = Math.sin(t * speed * 0.5 + seed) * 0.05;
+      if (c.position.y > 470) c.position.y = -470;
+      if (c.position.y < -470) c.position.y = 470;
+    }
+
+    var frac = scrollFraction();
+    group.rotation.y = frac * 0.5 - 0.25;
+
+    camera.position.x += (mouse.x * 36 - camera.position.x) * 0.04;
+    camera.position.y += (-mouse.y * 20 - camera.position.y) * 0.04;
+    camera.position.z = 480 - frac * 160;
+    camera.lookAt(0, 0, 0);
+
+    renderer.render(scene, camera);
+  }
+
+  if (running) {
+    animate();
+    requestAnimationFrame(function () { canvas.classList.add("is-ready"); });
+  }
+})();
+</script>
 
 </body>
 </html>
