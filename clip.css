@@ -180,133 +180,38 @@ blockquote.quote {
     font-size: 15px;
 }
 
-.comment {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
-}
-
-.comment-author {
-    display: block;
-    margin-bottom: 4px;
-    color: var(--accent-2);
-    font-weight: 800;
-    font-size: 13px;
-}
-
-.comment-body {
-    margin: 0;
-    color: var(--ink);
-    font-size: 14.5px;
-    line-height: 1.6;
-    white-space: pre-wrap;
-}
-
-/* Claim dialog */
-
-dialog.claim-dialog {
-    padding: 0;
-    width: 92%;
-    max-width: 420px;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    background: #101422;
-    color: var(--ink);
-}
-
-dialog.claim-dialog::backdrop {
-    background: rgba(0, 0, 0, 0.6);
-}
-
-.dialog-inner {
-    padding: 22px;
-}
-
-.dialog-inner h3 {
-    margin-top: 0;
-    color: var(--ink);
-}
-
-.dialog-subtext {
-    margin-bottom: 16px;
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.field {
-    margin-bottom: 14px;
-}
-
-.field label {
-    display: block;
-    margin-bottom: 6px;
-    color: var(--muted);
-    font-weight: 700;
-    font-size: 12px;
-}
-
-.field input,
-.field textarea {
-    width: 100%;
-    padding: 9px 11px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--ink);
-    font: inherit;
-}
-
-.field input:focus,
-.field textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-}
-
-.claim-error {
-    padding: 0 !important;
-    color: #ff8080 !important;
-    text-align: left !important;
-}
-
-.dialog-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-    margin-top: 12px;
-}
-
-.feed-item {
-    display: block;
-    color: inherit;
-    text-decoration: none;
-}
-
-.empty {
-    padding: 60px 0;
-    color: var(--muted);
-    text-align: center;
-}
-/* Replace the existing .comment / .comment-author / .comment-body rules
-   in clip.css with everything below (also covers .comments-empty and
-   the comment/sign-in composer, which had no styling at all before). */
+/* Replace the existing .comment / .comment-author / .comment-body /
+   .comments rules in clip.css with everything below. Each comment is
+   now its own bordered card (avatar + name + time on top, body below)
+   instead of a flat hairline-divided list - matching the extension's
+   own clip-card look. Also covers .comments-empty and the comment/
+   sign-in composer, which had no styling at all before. */
 
 .comments {
-  padding: 4px 20px;
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .comment {
   display: flex;
-  gap: 14px;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--border);
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 14px;
 }
-.comment:last-child { border-bottom: none; }
+
+.comment-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
 .comment-avatar {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
   display: grid;
   place-items: center;
@@ -317,16 +222,7 @@ dialog.claim-dialog::backdrop {
   font-weight: 800;
 }
 
-.comment-content { flex: 1; min-width: 0; }
-
-.comment-head {
-  display: flex;
-  align-items: baseline;
-  gap: 9px;
-  margin-bottom: 5px;
-}
-
-.comment-author { color: var(--ink); font-weight: 800; font-size: 13.5px; }
+.comment-author { color: var(--ink); font-weight: 800; font-size: 14px; }
 
 .comment-time {
   color: var(--ink-dim);
@@ -340,6 +236,10 @@ dialog.claim-dialog::backdrop {
   font-size: 14px;
   line-height: 1.65;
   white-space: pre-wrap;
+  /* a long unbroken string (a pasted link, no-space text, etc.) wraps
+     inside the card instead of overflowing it */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .comments-empty {
@@ -351,13 +251,13 @@ dialog.claim-dialog::backdrop {
 
 /* ---------- comment composer / sign-in ---------- */
 
-#comment-composer { margin-top: 18px; }
+#comment-composer { margin-top: 4px; }
 
 .comment-form, .signin-form {
   padding: 16px 18px;
   background: var(--surface-raised);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: 14px;
 }
 
 .comment-textarea {

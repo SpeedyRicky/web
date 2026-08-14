@@ -143,18 +143,17 @@ async function loadComments() {
     const name = c.profiles?.display_name || c.profiles?.username || "someone";
     return `
       <div class="comment">
-        <span class="comment-avatar">${initials(name)}</span>
-        <div class="comment-content">
-          <div class="comment-head">
-            <span class="comment-author">${escapeHtml(name)}</span>
-            <span class="comment-time">${timeAgo(c.created_at)}</span>
-          </div>
-          <p class="comment-body">${escapeHtml(c.body)}</p>
+        <div class="comment-head">
+          <span class="comment-avatar">${initials(name)}</span>
+          <span class="comment-author">${escapeHtml(name)}</span>
+          <span class="comment-time">${timeAgo(c.created_at)}</span>
         </div>
+        <p class="comment-body">${escapeHtml(c.body)}</p>
       </div>
     `;
   }).join("");
 }
+
 
 // Comments require an authenticated user (RLS: auth.uid() = user_id), and
 // this site has no account system of its own — so the composer doubles as
