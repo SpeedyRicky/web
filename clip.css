@@ -181,16 +181,24 @@ blockquote.quote {
 }
 
 .comment {
-    padding: 12px 0;
+    padding: 14px 0;
     border-bottom: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 13.5px;
 }
 
-.comment .who {
-    margin-right: 6px;
-    color: var(--text);
+.comment-author {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--accent-2);
     font-weight: 800;
+    font-size: 13px;
+}
+
+.comment-body {
+    margin: 0;
+    color: var(--ink);
+    font-size: 14.5px;
+    line-height: 1.6;
+    white-space: pre-wrap;
 }
 
 /* Claim dialog */
