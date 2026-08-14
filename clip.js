@@ -110,6 +110,20 @@ async function loadClip() {
   loadComments();
 }
 
+function timeAgo(dateString) {
+  const diffMs = Date.now() - new Date(dateString).getTime();
+  const minutes = Math.floor(diffMs / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months}mo ago`;
+  return `${Math.floor(months / 12)}y ago`;
+}
+
 async function loadComments() {
   const { data, error } = await supabase
     .from("comments")
@@ -122,15 +136,24 @@ async function loadComments() {
     return;
   }
   if (!data || data.length === 0) {
-    listEl.innerHTML = `<p class="comments-empty">No comments yet.</p>`;
+    listEl.innerHTML = `<p class="comments-empty">No comments yet — be the first to say something.</p>`;
     return;
   }
-  listEl.innerHTML = data.map((c) => `
-    <div class="comment">
-      <span class="comment-author">${escapeHtml(c.profiles?.display_name || c.profiles?.username || "someone")}</span>
-      <p class="comment-body">${escapeHtml(c.body)}</p>
-    </div>
-  `).join("");
+  listEl.innerHTML = data.map((c) => {
+    const name = c.profiles?.display_name || c.profiles?.username || "someone";
+    return `
+      <div class="comment">
+        <span class="comment-avatar">${initials(name)}</span>
+        <div class="comment-content">
+          <div class="comment-head">
+            <span class="comment-author">${escapeHtml(name)}</span>
+            <span class="comment-time">${timeAgo(c.created_at)}</span>
+          </div>
+          <p class="comment-body">${escapeHtml(c.body)}</p>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 // Comments require an authenticated user (RLS: auth.uid() = user_id), and
