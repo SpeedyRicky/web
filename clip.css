@@ -85,7 +85,6 @@ main {
 .footer-brand {
     display: flex;
     align-items: center;
-    margin-right: -200px;
 }
 
 .avatar {
@@ -117,6 +116,8 @@ blockquote.quote {
     font-size: 15px;
     line-height: 1.65;
     white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .source-box {

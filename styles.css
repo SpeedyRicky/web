@@ -343,7 +343,7 @@ header {
 .clip-card-body { padding: 22px 20px 24px; }
 .clip-card-row { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; color: var(--ink-dim); margin-bottom: 16px; }
 .clip-card-row b { color: var(--accent); font-weight: 700; }
-.clip-quote { font-family: var(--font-display); font-size: 18px; font-style: var(--em-style); font-weight: 500; line-height: 1.5; border-left: 2px solid var(--accent); padding-left: 16px; margin: 0 0 18px; }
+.clip-quote { font-family: var(--font-display); font-size: 18px; font-style: var(--em-style); font-weight: 500; line-height: 1.5; border-left: 2px solid var(--accent); padding-left: 16px; margin: 0 0 18px; overflow-wrap: anywhere; word-break: break-word; }
 .clip-source { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--ink-dim); padding-top: 14px; border-top: 1px solid var(--border); }
 .clip-source a { color: var(--accent-2); font-weight: 600; text-decoration: none; }
 .clip-source a:hover { text-decoration: underline; }
@@ -400,7 +400,7 @@ header {
 .activity-entry:hover .activity-body p { color: var(--accent-card-accent); }
 .activity-date { font-family: var(--font-mono); font-size: 11px; color: var(--accent-card-accent); letter-spacing: 0.08em; }
 .activity-date .op { color: var(--accent-card-fg-muted); font-family: var(--font-body); font-weight: 600; margin-left: 6px; }
-.activity-body p { margin: 0; color: var(--accent-card-fg); font-size: 14.5px; line-height: 1.6; transition: color .15s ease; }
+.activity-body p { margin: 0; color: var(--accent-card-fg); font-size: 14.5px; line-height: 1.6; transition: color .15s ease; overflow-wrap: anywhere; word-break: break-word; }
 .activity-video-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--accent-card-accent-2); border: 1px solid var(--accent-card-accent-2); border-radius: var(--radius); padding: 3px 8px; margin-bottom: 8px; }
 .activity-meta { font-family: var(--font-mono); font-size: 10.5px; color: var(--accent-card-fg-muted); }
 .activity-meta .src { margin-left: 6px; }
