@@ -6,7 +6,7 @@
 // directly into `claims` with the anon key via the "anyone can file a
 // claim" RLS policy — no account needed for that.
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
 const cfg = window.MARGINAL_CONFIG;
 const supabase = createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
@@ -21,6 +21,17 @@ function escapeHtml(str) {
   }[c]));
 }
 function initials(name) { return (name || "?").trim().slice(0, 2).toUpperCase(); }
+
+// escapeHtml() alone doesn't stop a javascript: URL from reaching an
+// href attribute — only http(s) URLs are ever allowed through here.
+function safeHref(url) {
+  try {
+    const parsed = new URL(url, location.href);
+    return ["http:", "https:"].includes(parsed.protocol) ? parsed.href : "#";
+  } catch {
+    return "#";
+  }
+}
 
 function formatClipTime(totalSeconds) {
   const s = Math.max(0, Math.floor(Number(totalSeconds) || 0));
@@ -55,7 +66,13 @@ async function loadClip() {
     return;
   }
   const { data, error } = await supabase.from("clips_feed").select("*").eq("slug", slug).single();
-  if (error || !data) {
+  // PGRST116 = "no rows" from .single() — that's a real "not found".
+  // Any other error is a transient/network/DB problem, not a missing clip.
+  if (error && error.code !== "PGRST116") {
+    container.innerHTML = `<p class="clip-not-found">Something went wrong loading this clip. Try refreshing the page.</p>`;
+    return;
+  }
+  if (!data) {
     container.innerHTML = `<p class="clip-not-found">This clip doesn't exist or was removed.</p>`;
     return;
   }
@@ -67,7 +84,7 @@ async function loadClip() {
   const quoteBlock = isVideo
     ? `<span class="activity-video-tag">▶ ${formatClipTime(data.video_start_seconds)} – ${formatClipTime(data.video_end_seconds)}</span>`
     : `<blockquote class="clip-quote">"${escapeHtml(data.quoted_text)}"</blockquote>`;
-  const sourceHref = isVideo ? withStartTime(data.source_url, data.video_start_seconds) : data.source_url;
+  const sourceHref = safeHref(isVideo ? withStartTime(data.source_url, data.video_start_seconds) : data.source_url);
 
   container.innerHTML = `
     <div class="clip-card">
@@ -95,7 +112,7 @@ async function loadClip() {
     <section class="section comments-section" id="comments">
       <div class="section-head" style="margin-bottom:20px;">
         <h2 class="display" style="font-size:19px;">Comments</h2>
-        <p>Discuss this clip with the ClipNoter community.</p>
+        <p>Discuss this clip with the ClipRoots community.</p>
       </div>
       <div class="comments" id="comments-list"></div>
       <div id="comment-composer"></div>
@@ -127,7 +144,7 @@ function timeAgo(dateString) {
 async function loadComments() {
   const { data, error } = await supabase
     .from("comments")
-    .select("body, created_at, profiles(username, display_name)")
+    .select("body, created_at, is_system, profiles(username, display_name)")
     .eq("clip_id", currentClip.id)
     .order("created_at", { ascending: true });
   const listEl = document.getElementById("comments-list");
@@ -140,6 +157,18 @@ async function loadComments() {
     return;
   }
   listEl.innerHTML = data.map((c) => {
+    if (c.is_system) {
+      return `
+        <div class="comment comment-system">
+          <div class="comment-head">
+            <span class="comment-avatar comment-avatar-system">⚑</span>
+            <span class="comment-author">ClipRoots Moderation</span>
+            <span class="comment-time">${timeAgo(c.created_at)}</span>
+          </div>
+          <p class="comment-body">${escapeHtml(c.body)}</p>
+        </div>
+      `;
+    }
     const name = c.profiles?.display_name || c.profiles?.username || "someone";
     return `
       <div class="comment">
@@ -194,42 +223,54 @@ async function handleCommentSubmit(e) {
   e.preventDefault();
   const bodyEl = document.getElementById("comment-body");
   const errEl = document.getElementById("comment-error");
+  const submitBtn = e.target.querySelector('button[type="submit"]');
   const body = bodyEl.value.trim();
   errEl.style.display = "none";
   if (!body) return;
 
-  const { error } = await supabase.from("comments").insert({
-    clip_id: currentClip.id,
-    user_id: currentSession.user.id,
-    body
-  });
+  if (submitBtn) submitBtn.disabled = true;
+  try {
+    const { error } = await supabase.from("comments").insert({
+      clip_id: currentClip.id,
+      user_id: currentSession.user.id,
+      body
+    });
 
-  if (error) {
-    errEl.textContent = error.message;
-    errEl.style.display = "block";
-    return;
+    if (error) {
+      errEl.textContent = error.message;
+      errEl.style.display = "block";
+      return;
+    }
+
+    bodyEl.value = "";
+    loadComments();
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
   }
-
-  bodyEl.value = "";
-  loadComments();
 }
 
 async function handleSignInSubmit(e) {
   e.preventDefault();
   const emailEl = document.getElementById("signin-email");
   const statusEl = document.getElementById("signin-status");
+  const submitBtn = e.target.querySelector('button[type="submit"]');
   const email = emailEl.value.trim();
   if (!email) return;
 
   statusEl.style.display = "block";
   statusEl.textContent = "Sending…";
+  if (submitBtn) submitBtn.disabled = true;
 
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: { emailRedirectTo: location.href }
-  });
+  try {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: location.href }
+    });
 
-  statusEl.textContent = error ? error.message : "Check your email for a sign-in link.";
+    statusEl.textContent = error ? error.message : "Check your email for a sign-in link.";
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
+  }
 }
 
 supabase.auth.onAuthStateChange((_event, session) => {
@@ -241,7 +282,8 @@ document.getElementById("claim-cancel").addEventListener("click", () => {
   document.getElementById("claim-dialog").close();
 });
 
-document.getElementById("claim-submit").addEventListener("click", async () => {
+document.getElementById("claim-submit").addEventListener("click", async (e) => {
+  const btn = e.currentTarget;
   const name = document.getElementById("claim-name").value.trim();
   const email = document.getElementById("claim-email").value.trim();
   const reason = document.getElementById("claim-reason").value.trim();
@@ -252,17 +294,22 @@ document.getElementById("claim-submit").addEventListener("click", async () => {
     errEl.style.display = "block";
     return;
   }
-  const { error } = await supabase.from("claims").insert({
-    clip_id: currentClip.id, claimant_name: name, claimant_email: email, reason
-  });
-  if (error) {
-    errEl.textContent = error.message;
-    errEl.style.display = "block";
-    return;
+  btn.disabled = true;
+  try {
+    const { error } = await supabase.from("claims").insert({
+      clip_id: currentClip.id, claimant_name: name, claimant_email: email, reason
+    });
+    if (error) {
+      errEl.textContent = error.message;
+      errEl.style.display = "block";
+      return;
+    }
+    document.getElementById("claim-dialog").close();
+    alert("Claim submitted. The clip owner has been notified.");
+    loadClip();
+  } finally {
+    btn.disabled = false;
   }
-  document.getElementById("claim-dialog").close();
-  alert("Claim submitted. The clip owner has been notified.");
-  loadClip();
 });
 
 (async () => {
