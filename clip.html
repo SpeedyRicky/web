@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,500&family=Fraunces:ital,wght@0,500;0,600;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="clip.css">
 </head>
 <body>
 
@@ -64,15 +65,23 @@
 
 <dialog id="claim-dialog" class="claim-dialog">
   <div class="claim-dialog-inner">
-    <h3>File a Complaint</h3>
-    <p class="claim-dialog-subtext">If you're the original creator or rights holder and believe this clip should be reviewed or removed, tell us below.</p>
+    <h3>Report a complaint / issue</h3>
+    <p class="claim-dialog-subtext">Tell us what's wrong with this clip. This goes straight to our team — it's never shown publicly.</p>
+    <div class="claim-field">
+      <label for="claim-type">What's this about?</label>
+      <select id="claim-type" required>
+        <option value="" disabled selected>Select a reason…</option>
+        <option value="copyright_ownership">Copyright or rights issue (I own this content)</option>
+        <option value="content_concern">Something else (complaint, abuse, or other issue)</option>
+      </select>
+    </div>
     <div class="claim-field"><label for="claim-name">Your name</label><input id="claim-name" type="text" /></div>
     <div class="claim-field"><label for="claim-email">Email</label><input id="claim-email" type="email" /></div>
     <div class="claim-field"><label for="claim-reason">Reason</label><textarea id="claim-reason" rows="4" placeholder="Explain the issue…"></textarea></div>
     <p id="claim-error" class="claim-error" style="display:none;"></p>
     <div class="claim-actions">
       <button class="btn btn-ghost" id="claim-cancel" type="button">Cancel</button>
-      <button class="btn btn-primary" id="claim-submit" type="button">Submit complaint</button>
+      <button class="btn btn-primary" id="claim-submit" type="button">Submit report</button>
     </div>
   </div>
 </dialog>
@@ -105,6 +114,7 @@
       <div class="footer-col-title">Legal</div>
       <a href="privacy.html">Privacy Policy</a>
       <a href="terms.html">Terms of Service</a>
+      <a href="dmca.html">DMCA Policy</a>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">Support</div>

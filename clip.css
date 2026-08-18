@@ -164,6 +164,32 @@ blockquote.quote {
   gap: 10px;
 }
 
+.comment-delete {
+  margin-left: auto;
+
+  padding: 3px 9px;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+
+  color: var(--ink-dim);
+
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.comment-delete:hover {
+  border-color: var(--alert);
+  color: var(--alert);
+}
+
+.comment-delete:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
 .comment-avatar {
   width: 32px;
   height: 32px;
@@ -282,3 +308,86 @@ blockquote.quote {
 }
 .comment-error { color: var(--alert); }
 .signin-status { color: var(--ink-dim); }
+
+/* ---------- report a complaint / issue dialog ---------- */
+
+.clip-claim-row { margin-top: 4px; }
+
+dialog.claim-dialog {
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 19px;
+  background: transparent;
+  color: var(--ink);
+}
+dialog.claim-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.claim-dialog-inner {
+  width: min(calc(100vw - 48px), 420px);
+  padding: 24px 26px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025));
+  border-radius: 19px;
+}
+
+.claim-dialog-inner h3 {
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 19px;
+}
+
+.claim-dialog-subtext {
+  margin: 0 0 18px;
+  color: var(--ink-dim);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.claim-field { margin-bottom: 14px; }
+
+.claim-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink-dim);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.claim-field input,
+.claim-field select,
+.claim-field textarea {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 6px);
+  color: var(--ink);
+  font: inherit;
+}
+
+.claim-field select { appearance: auto; }
+
+.claim-field input:focus,
+.claim-field select:focus,
+.claim-field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.claim-field textarea { resize: vertical; }
+
+.claim-error {
+  margin: 0 0 4px;
+  color: var(--alert);
+  font-size: 12.5px;
+}
+
+.claim-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}

@@ -67,3 +67,12 @@
 #profile-clips-section {
   padding-top: 40px;
 }
+
+/* "Following" reads as "Unfollow" on hover/focus (label swapped in JS) -
+   this tints red to match, so the action reads as a real toggle, not
+   just a status label that happens to be clickable. */
+.follow-btn-following:hover,
+.follow-btn-following:focus-visible {
+  border-color: var(--alert);
+  color: var(--alert);
+}

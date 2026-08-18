@@ -40,10 +40,26 @@ function formatClipTime(totalSeconds) {
 }
 
 let currentSession = null;
+let currentViewerProfile = null;
 let profile = null;
 let isFollowing = false;
 let followerCount = 0;
 let followingCount = 0;
+
+// A signed-in session alone isn't enough to follow someone - the same
+// email can only ever back one auth account, but that account has no
+// visible identity (no `profiles` row) until it picks a username, so
+// this makes that a one-time, unskippable step before the Follow
+// button appears, the same way clip.js gates commenting.
+async function loadCurrentViewerProfile() {
+  if (!currentSession) {
+    currentViewerProfile = null;
+    return;
+  }
+  const { data } = await supabase
+    .from("profiles").select("*").eq("id", currentSession.user.id).maybeSingle();
+  currentViewerProfile = data || null;
+}
 
 async function loadProfile() {
   if (!username) {
@@ -68,6 +84,8 @@ async function loadProfile() {
   ]);
   followerCount = followersRes.count || 0;
   followingCount = followingRes.count || 0;
+
+  await loadCurrentViewerProfile();
 
   isFollowing = false;
   if (currentSession && currentSession.user.id !== profile.id) {
@@ -138,13 +156,74 @@ function renderFollowAction() {
     return;
   }
 
+  if (!currentViewerProfile) {
+    el.innerHTML = `
+      <form id="username-form" class="signin-form">
+        <p class="signin-hint">One more step - pick a username so people know who's following them. This is a one-time setup for this account.</p>
+        <div class="comment-form-actions">
+          <input class="signin-email" id="username-input" type="text" placeholder="username" maxlength="30" required />
+          <button type="submit" class="btn btn-primary">Save and follow</button>
+        </div>
+        <p id="username-error" class="comment-error" style="display:none;"></p>
+      </form>
+    `;
+    document.getElementById("username-form").addEventListener("submit", handleUsernameSubmit);
+    return;
+  }
+
+  // "Following" swaps to "Unfollow" on hover/focus so it reads as an
+  // action, not just a status label - the click behavior (toggle) was
+  // already an unfollow, this just makes that obvious at a glance.
   el.innerHTML = `
-    <button class="btn ${isFollowing ? "btn-ghost" : "btn-primary"}" id="follow-btn" type="button">
-      ${isFollowing ? "Following ✓" : "Follow"}
+    <button class="btn ${isFollowing ? "btn-ghost follow-btn-following" : "btn-primary"}" id="follow-btn" type="button">
+      <span class="follow-btn-label">${isFollowing ? "Following ✓" : "Follow"}</span>
     </button>
     <p id="follow-error" class="comment-error" style="display:none;"></p>
   `;
-  document.getElementById("follow-btn").addEventListener("click", handleFollowToggle);
+  const followBtn = document.getElementById("follow-btn");
+  followBtn.addEventListener("click", handleFollowToggle);
+  if (isFollowing) {
+    const label = followBtn.querySelector(".follow-btn-label");
+    followBtn.addEventListener("mouseenter", () => { label.textContent = "Unfollow"; });
+    followBtn.addEventListener("mouseleave", () => { label.textContent = "Following ✓"; });
+    followBtn.addEventListener("focus", () => { label.textContent = "Unfollow"; });
+    followBtn.addEventListener("blur", () => { label.textContent = "Following ✓"; });
+  }
+}
+
+async function handleUsernameSubmit(e) {
+  e.preventDefault();
+  const inputEl = document.getElementById("username-input");
+  const errEl = document.getElementById("username-error");
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const username = inputEl.value.trim();
+  errEl.style.display = "none";
+
+  if (!username || /\s/.test(username)) {
+    errEl.textContent = "Username can't be empty or contain spaces.";
+    errEl.style.display = "block";
+    return;
+  }
+
+  if (submitBtn) submitBtn.disabled = true;
+  try {
+    const { error } = await supabase.from("profiles").insert({
+      id: currentSession.user.id,
+      username
+    });
+    if (error) {
+      // 23505 = unique_violation - someone already has this username.
+      errEl.textContent = error.code === "23505"
+        ? "That username is taken - try another."
+        : (error.message || "Couldn't save that username. Try again.");
+      errEl.style.display = "block";
+      return;
+    }
+    await loadCurrentViewerProfile();
+    renderFollowAction();
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
+  }
 }
 
 async function handleFollowToggle() {
