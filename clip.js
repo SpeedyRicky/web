@@ -95,7 +95,7 @@ async function loadClip() {
       <div class="clip-card-body">
         <div class="clip-author">
           <span class="clip-avatar">${initials(data.author_display_name || data.author_username)}</span>
-          <span><b>${escapeHtml(data.author_display_name || data.author_username)}</b> · @${escapeHtml(data.author_username)}</span>
+          <span><b>${escapeHtml(data.author_display_name || data.author_username)}</b> · <a class="profile-link" href="profiles.html?username=${encodeURIComponent(data.author_username)}">@${escapeHtml(data.author_username)}</a></span>
         </div>
         ${claimBanner}
         ${quoteBlock}
