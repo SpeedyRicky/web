@@ -4,10 +4,9 @@
 // comments (magic-link sign-in required, per the "authenticated users
 // can comment" RLS policy) and the "Report a complaint / issue" dialog,
 // which inserts directly into `claims` with the anon key via the "anyone
-// can file a claim" RLS policy — no account needed for that. A copyright
-// claim (claim_type: "copyright_ownership") stays public per the DMCA
-// policy; any other report (claim_type: "content_concern") is private —
-// a database trigger emails cliproots@gmail.com but never posts publicly.
+// can file a claim" RLS policy — no account needed for that. A database
+// trigger emails cliproots@gmail.com and immediately hides the clip; the
+// report itself is never shown publicly.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
@@ -382,25 +381,18 @@ document.getElementById("claim-cancel").addEventListener("click", () => {
   document.getElementById("claim-dialog").close();
 });
 
-// A copyright/rights claim keeps the public "under review" flow our DMCA
-// policy describes (RLS-enforced trigger posts a system comment and flips
-// claim_status). Anything else ("content_concern") is a private report -
-// the trigger skips every public side effect for that type, so it's only
-// ever visible to us (an automatic email) and, per existing RLS, the
-// clip's own owner - never to other visitors.
+// Filing a report emails cliproots@gmail.com and immediately hides the
+// clip (RLS-enforced trigger sets claim_status = 'resolved_removed',
+// which clips_feed already excludes from every public listing and from
+// direct clip.html lookups) - it's never posted publicly, and there's no
+// "under review" banner. Only ClipRoots staff see the report itself.
 document.getElementById("claim-submit").addEventListener("click", async (e) => {
   const btn = e.currentTarget;
-  const claimType = document.getElementById("claim-type").value;
   const name = document.getElementById("claim-name").value.trim();
   const email = document.getElementById("claim-email").value.trim();
   const reason = document.getElementById("claim-reason").value.trim();
   const errEl = document.getElementById("claim-error");
   errEl.style.display = "none";
-  if (!claimType) {
-    errEl.textContent = "Please choose what this report is about.";
-    errEl.style.display = "block";
-    return;
-  }
   if (!name || !email || !reason) {
     errEl.textContent = "Please fill in every field.";
     errEl.style.display = "block";
@@ -409,7 +401,7 @@ document.getElementById("claim-submit").addEventListener("click", async (e) => {
   btn.disabled = true;
   try {
     const { error } = await supabase.from("claims").insert({
-      clip_id: currentClip.id, claim_type: claimType, claimant_name: name, claimant_email: email, reason
+      clip_id: currentClip.id, claimant_name: name, claimant_email: email, reason
     });
     if (error) {
       errEl.textContent = error.message;
@@ -417,13 +409,10 @@ document.getElementById("claim-submit").addEventListener("click", async (e) => {
       return;
     }
     document.getElementById("claim-dialog").close();
-    document.getElementById("claim-type").value = "";
     document.getElementById("claim-name").value = "";
     document.getElementById("claim-email").value = "";
     document.getElementById("claim-reason").value = "";
-    alert(claimType === "copyright_ownership"
-      ? "Report submitted. The clip owner has been notified, and the clip is now marked under review."
-      : "Report submitted privately. Our team will take a look — thanks for flagging this.");
+    alert("Report submitted. This clip is now hidden while our team reviews it.");
     loadClip();
   } finally {
     btn.disabled = false;

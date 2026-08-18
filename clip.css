@@ -356,7 +356,6 @@ dialog.claim-dialog::backdrop {
 }
 
 .claim-field input,
-.claim-field select,
 .claim-field textarea {
   display: block;
   width: 100%;
@@ -368,10 +367,7 @@ dialog.claim-dialog::backdrop {
   font: inherit;
 }
 
-.claim-field select { appearance: auto; }
-
 .claim-field input:focus,
-.claim-field select:focus,
 .claim-field textarea:focus {
   outline: none;
   border-color: var(--accent);
