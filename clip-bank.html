@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClipRoots clip bank</title>
+<meta name="description" content="Every clip you've saved on ClipRoots, in one place.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,500&family=Fraunces:ital,wght@0,500;0,600;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="clip.css">
+</head>
+<body>
+
+<div class="reveal-page">
+
+<div class="progress-rail" aria-hidden="true"><span id="progress-fill"></span></div>
+
+<header>
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html#top">
+      <span class="brand-mark">C</span>
+      <span class="brand-name">ClipRoots</span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html#sequence">How it works</a>
+      <a href="index.html#systems">Features</a>
+      <a href="index.html#platforms">Platforms</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="index.html#log">Activity</a>
+    </nav>
+    <div class="theme-toggle" id="theme-toggle" role="group" aria-label="Theme">
+      <button type="button" class="theme-btn" data-theme-choice="light">Light</button>
+      <button type="button" class="theme-btn" data-theme-choice="dark">Dark</button>
+      <button type="button" class="theme-btn" data-theme-choice="auto" aria-pressed="true">Auto</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap clip-view">
+    <div class="section-head" style="margin-bottom:20px;">
+      <h1 class="display" style="font-size:26px;">Your Clip Bank</h1>
+      <p>Every clip you've saved, public and private, newest first.</p>
+    </div>
+    <div id="container">
+      <p class="clip-not-found">Loading…</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="index.html#top">
+        <span class="brand-mark">C</span>
+        <span class="brand-name">ClipRoots</span>
+      </a>
+      <p>Capture the things worth keeping from the web.</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Product</div>
+      <a href="index.html#sequence">How it works</a>
+      <a href="index.html#systems">Features</a>
+      <a href="index.html#platforms">Platforms</a>
+      <a href="index.html#faq">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">ClipRoots for</div>
+      <a href="index.html#platforms">YouTube</a>
+      <a href="index.html#platforms">Udemy</a>
+      <a href="index.html#platforms">Vimeo</a>
+      <a href="index.html#platforms">Web</a>
+      <a href="index.html#platforms">More platforms</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Legal</div>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="dmca.html">DMCA Policy</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Support</div>
+      <a href="support.html#guide">Guide</a>
+      <a href="support.html#learn">Learn</a>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span class="footer-plate">© 2026 CLIPROOTS</span>
+    <a href="https://chromewebstore.google.com/detail/clipnoter-%E2%80%94-clip-comment/coflhhkdefdhkealolkmfpgpkkljlkoi" target="_blank" rel="noopener">Get the extension</a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var root = document.documentElement;
+  var toggle = document.getElementById("theme-toggle");
+  var buttons = toggle ? toggle.querySelectorAll(".theme-btn") : [];
+
+  function resolve(pref) {
+    if (pref === "auto") return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return pref;
+  }
+  function applyTheme(pref) {
+    root.setAttribute("data-theme", resolve(pref));
+    try { localStorage.setItem("clipnoter-theme-pref", pref); } catch (e) {}
+    buttons.forEach(function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-theme-choice") === pref ? "true" : "false");
+    });
+  }
+
+  var storedPref = "auto";
+  try { storedPref = localStorage.getItem("clipnoter-theme-pref") || "auto"; } catch (e) {}
+  applyTheme(storedPref);
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () { applyTheme(btn.getAttribute("data-theme-choice")); });
+  });
+
+  var systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+  if (systemDark.addEventListener) {
+    systemDark.addEventListener("change", function () {
+      var pref = "auto";
+      try { pref = localStorage.getItem("clipnoter-theme-pref") || "auto"; } catch (e) {}
+      if (pref === "auto") applyTheme("auto");
+    });
+  }
+
+  function onScroll() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    var fill = document.getElementById("progress-fill");
+    if (fill) fill.style.width = (progress * 100).toFixed(1) + "%";
+  }
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+})();
+</script>
+
+<script src="config.js"></script>
+<script type="module" src="clip-bank.js"></script>
+
+</body>
+</html>
