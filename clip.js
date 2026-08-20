@@ -3,10 +3,11 @@
 // (the same one the homepage uses for its preview), then wires up
 // comments (magic-link sign-in required, per the "authenticated users
 // can comment" RLS policy) and the "Report a complaint / issue" dialog,
-// which inserts directly into `claims` with the anon key via the "anyone
-// can file a claim" RLS policy — no account needed for that. A database
-// trigger emails cliproots@gmail.com and immediately hides the clip; the
-// report itself is never shown publicly.
+// which now requires that same signed-in-with-a-username identity (RLS:
+// "signed-in accounts can file a claim" checks reporter_id = auth.uid())
+// — a typed name proved nothing, since one email can back several
+// accounts. A database trigger emails cliproots@gmail.com and
+// immediately hides the clip; the report itself is never shown publicly.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
@@ -141,6 +142,7 @@ async function loadClip() {
   `;
 
   document.getElementById("open-claim").addEventListener("click", () => {
+    renderClaimDialog();
     document.getElementById("claim-dialog").showModal();
   });
 
@@ -375,33 +377,142 @@ supabase.auth.onAuthStateChange(async (_event, session) => {
   currentSession = session;
   await loadCurrentProfile();
   renderComposer();
+  if (document.getElementById("claim-dialog")?.open) renderClaimDialog();
 });
 
 document.getElementById("claim-cancel").addEventListener("click", () => {
   document.getElementById("claim-dialog").close();
 });
 
-// Filing a report emails cliproots@gmail.com and immediately hides the
-// clip (RLS-enforced trigger sets claim_status = 'resolved_removed',
-// which clips_feed already excludes from every public listing and from
-// direct clip.html lookups) - it's never posted publicly, and there's no
-// "under review" banner. Only ClipRoots staff see the report itself.
-document.getElementById("claim-submit").addEventListener("click", async (e) => {
-  const btn = e.currentTarget;
-  const name = document.getElementById("claim-name").value.trim();
-  const email = document.getElementById("claim-email").value.trim();
-  const reason = document.getElementById("claim-reason").value.trim();
-  const errEl = document.getElementById("claim-error");
+// Same 3-step identity gate as the comment composer: sign in by email,
+// then (once, for a brand-new account) pick a username, before the
+// actual report form appears. Filing a report emails cliproots@gmail.com
+// and immediately hides the clip (RLS trigger sets claim_status =
+// 'resolved_removed', which clips_feed already excludes everywhere) -
+// it's never posted publicly, and there's no "under review" banner.
+function renderClaimDialog() {
+  const el = document.getElementById("claim-dialog-body");
+  if (!el) return;
+
+  if (!currentSession) {
+    el.innerHTML = `
+      <form id="claim-signin-form" class="signin-form">
+        <p class="signin-hint">Sign in with email to file a report.</p>
+        <div class="comment-form-actions">
+          <input class="signin-email" id="claim-signin-email" type="email" placeholder="you@example.com" required />
+          <button type="submit" class="btn btn-primary">Email me a link</button>
+        </div>
+        <p id="claim-signin-status" class="signin-status" style="display:none;"></p>
+      </form>
+    `;
+    document.getElementById("claim-signin-form").addEventListener("submit", handleClaimSignIn);
+    return;
+  }
+
+  if (!currentProfile) {
+    el.innerHTML = `
+      <form id="claim-username-form" class="signin-form">
+        <p class="signin-hint">One more step - pick a username so we know who's reporting. This is a one-time setup for this account.</p>
+        <div class="comment-form-actions">
+          <input class="signin-email" id="claim-username-input" type="text" placeholder="username" maxlength="30" required />
+          <button type="submit" class="btn btn-primary">Save and continue</button>
+        </div>
+        <p id="claim-username-error" class="comment-error" style="display:none;"></p>
+      </form>
+    `;
+    document.getElementById("claim-username-form").addEventListener("submit", handleClaimUsernameSubmit);
+    return;
+  }
+
+  el.innerHTML = `
+    <form id="claim-report-form" class="comment-form">
+      <p class="comment-signed-in-as">Reporting as @${escapeHtml(currentProfile.username)}</p>
+      <textarea class="comment-textarea" id="claim-reason" rows="4" placeholder="Explain the issue…" required></textarea>
+      <div class="comment-form-actions">
+        <span></span>
+        <button type="submit" class="btn btn-primary">Submit report</button>
+      </div>
+      <p id="claim-error" class="comment-error" style="display:none;"></p>
+    </form>
+  `;
+  document.getElementById("claim-report-form").addEventListener("submit", handleClaimSubmit);
+}
+
+async function handleClaimSignIn(e) {
+  e.preventDefault();
+  const emailEl = document.getElementById("claim-signin-email");
+  const statusEl = document.getElementById("claim-signin-status");
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const email = emailEl.value.trim();
+  if (!email) return;
+
+  statusEl.style.display = "block";
+  statusEl.textContent = "Sending…";
+  if (submitBtn) submitBtn.disabled = true;
+
+  try {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: location.href }
+    });
+    statusEl.textContent = error ? error.message : "Check your email for a sign-in link.";
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
+  }
+}
+
+async function handleClaimUsernameSubmit(e) {
+  e.preventDefault();
+  const inputEl = document.getElementById("claim-username-input");
+  const errEl = document.getElementById("claim-username-error");
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const username = inputEl.value.trim();
   errEl.style.display = "none";
-  if (!name || !email || !reason) {
-    errEl.textContent = "Please fill in every field.";
+
+  if (!username || /\s/.test(username)) {
+    errEl.textContent = "Username can't be empty or contain spaces.";
     errEl.style.display = "block";
     return;
   }
-  btn.disabled = true;
+
+  if (submitBtn) submitBtn.disabled = true;
+  try {
+    const { error } = await supabase.from("profiles").insert({
+      id: currentSession.user.id,
+      username
+    });
+    if (error) {
+      errEl.textContent = error.code === "23505"
+        ? "That username is taken - try another."
+        : (error.message || "Couldn't save that username. Try again.");
+      errEl.style.display = "block";
+      return;
+    }
+    await loadCurrentProfile();
+    renderClaimDialog();
+    renderComposer();
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
+  }
+}
+
+async function handleClaimSubmit(e) {
+  e.preventDefault();
+  const reasonEl = document.getElementById("claim-reason");
+  const errEl = document.getElementById("claim-error");
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  const reason = reasonEl.value.trim();
+  errEl.style.display = "none";
+  if (!reason) return;
+
+  if (submitBtn) submitBtn.disabled = true;
   try {
     const { error } = await supabase.from("claims").insert({
-      clip_id: currentClip.id, claimant_name: name, claimant_email: email, reason
+      clip_id: currentClip.id,
+      reporter_id: currentSession.user.id,
+      claimant_name: currentProfile.username,
+      claimant_email: currentSession.user.email,
+      reason
     });
     if (error) {
       errEl.textContent = error.message;
@@ -409,15 +520,12 @@ document.getElementById("claim-submit").addEventListener("click", async (e) => {
       return;
     }
     document.getElementById("claim-dialog").close();
-    document.getElementById("claim-name").value = "";
-    document.getElementById("claim-email").value = "";
-    document.getElementById("claim-reason").value = "";
     alert("Report submitted. This clip is now hidden while our team reviews it.");
     loadClip();
   } finally {
-    btn.disabled = false;
+    if (submitBtn) submitBtn.disabled = false;
   }
-});
+}
 
 (async () => {
   const { data } = await supabase.auth.getSession();

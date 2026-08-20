@@ -643,11 +643,18 @@ function formatClipTime(totalSeconds) {
   return `${m}:${String(r).padStart(2, "0")}`;
 }
 
+// This is a public showcase, not a personal feed - it must never show a
+// clip that isn't public, even to a signed-in visitor viewing their own
+// private clips. clips_feed's RLS already lets an owner see their own
+// private rows (so they can find them elsewhere on the site), which is
+// exactly why this needs its own explicit is_private filter rather than
+// relying on the view alone.
 async function loadFeed() {
   const el = document.getElementById("feed");
   const { data, error } = await supabase
     .from("clips_feed")
     .select("*")
+    .eq("is_private", false)
     .order("created_at", { ascending: false })
     .limit(6);
 

@@ -1,0 +1,7 @@
+/* Admin review queue - structural/page-specific rules only. Everything
+   else (card, avatar, comment, signin-form, btn) is reused as-is from
+   clip.css and styles.css, both loaded before this file. */
+
+#admin-queue {
+  margin-top: 4px;
+}

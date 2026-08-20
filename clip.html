@@ -66,14 +66,10 @@
 <dialog id="claim-dialog" class="claim-dialog">
   <div class="claim-dialog-inner">
     <h3>Report a complaint / issue</h3>
-    <p class="claim-dialog-subtext">Tell us what's wrong with this clip. This goes straight to our team — the clip is hidden right away while we review it, and your report is never shown publicly.</p>
-    <div class="claim-field"><label for="claim-name">Your name</label><input id="claim-name" type="text" /></div>
-    <div class="claim-field"><label for="claim-email">Email</label><input id="claim-email" type="email" /></div>
-    <div class="claim-field"><label for="claim-reason">Reason</label><textarea id="claim-reason" rows="4" placeholder="Explain the issue…"></textarea></div>
-    <p id="claim-error" class="claim-error" style="display:none;"></p>
+    <p class="claim-dialog-subtext">Tell us what's wrong with this clip. The clip is hidden right away while we review it, and your report is never shown publicly.</p>
+    <div id="claim-dialog-body"></div>
     <div class="claim-actions">
       <button class="btn btn-ghost" id="claim-cancel" type="button">Cancel</button>
-      <button class="btn btn-primary" id="claim-submit" type="button">Submit report</button>
     </div>
   </div>
 </dialog>
