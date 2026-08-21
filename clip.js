@@ -64,6 +64,13 @@ let currentClip = null;
 let currentSession = null;
 let currentProfile = null;
 
+// The sign-in form (below) collects a username alongside the email and
+// verifies it's actually linked to that email before sending the magic
+// link. For a brand-new account there's nothing to verify yet, so the
+// typed username is stashed here and claimed the moment the account's
+// first session shows up with no profile row.
+const PENDING_USERNAME_KEY = "cliproots_pending_username";
+
 // A signed-in session alone isn't enough to comment - every comment
 // shows a username, and profiles.username is unique, so we need an
 // actual row in `profiles` for this auth user before an insert into
@@ -79,7 +86,25 @@ async function loadCurrentProfile() {
   }
   const { data } = await supabase
     .from("profiles").select("*").eq("id", currentSession.user.id).maybeSingle();
-  currentProfile = data || null;
+  if (data) {
+    currentProfile = data;
+    return;
+  }
+
+  const pending = localStorage.getItem(PENDING_USERNAME_KEY);
+  if (pending) {
+    localStorage.removeItem(PENDING_USERNAME_KEY);
+    const { data: created, error } = await supabase
+      .from("profiles").insert({ id: currentSession.user.id, username: pending }).select().single();
+    if (!error) {
+      currentProfile = created;
+      return;
+    }
+    // Unique-violation race (someone claimed it first between the
+    // sign-in check and now) or another insert error - fall through to
+    // the manual username picker below instead of losing the session.
+  }
+  currentProfile = null;
 }
 
 async function loadClip() {
@@ -236,11 +261,13 @@ document.addEventListener("click", (event) => {
 
 // Comments require an authenticated user (RLS: auth.uid() = user_id), and
 // this site has no account system of its own — so the composer doubles as
-// a passwordless sign-in: enter an email, get a magic link, come back
-// signed in via Supabase auth's own session handling. A session alone
-// isn't enough to post, though - a brand-new account has no `profiles`
-// row yet (nothing creates one on sign-in), so the composer asks for a
-// username first and creates that row before showing the comment box.
+// a passwordless sign-in: enter an email and username together, get a
+// magic link, come back signed in via Supabase auth's own session
+// handling. The username is verified against usernames_for_email up
+// front (see handleSignInSubmit) rather than just typed and trusted. A
+// brand-new account's typed username is auto-claimed into its first
+// `profiles` row on sign-in; the manual picker below is only a fallback
+// for the rare race where that auto-claim loses a username collision.
 function renderComposer() {
   const el = document.getElementById("comment-composer");
   if (!el) return;
@@ -272,12 +299,14 @@ function renderComposer() {
   } else {
     el.innerHTML = `
       <form id="signin-form" class="signin-form">
-        <p class="signin-hint">Sign in with email to leave a comment.</p>
+        <p class="signin-hint">Sign in with your email and username to leave a comment.</p>
         <div class="comment-form-actions">
           <input class="signin-email" id="signin-email" type="email" placeholder="you@example.com" required />
+          <input class="signin-email" id="signin-username" type="text" placeholder="username" maxlength="30" required />
           <button type="submit" class="btn btn-primary">Email me a link</button>
         </div>
         <p id="signin-status" class="signin-status" style="display:none;"></p>
+        <div id="signin-mismatch" style="display:none;"></div>
       </form>
     `;
     document.getElementById("signin-form").addEventListener("submit", handleSignInSubmit);
@@ -349,25 +378,78 @@ async function handleCommentSubmit(e) {
   }
 }
 
+// Sends the actual magic link and reports the outcome. Shared by the
+// "everything checks out" path and by picking a username off the
+// "Show accounts" list after a mismatch.
+async function sendSignInLink(email, statusEl) {
+  statusEl.style.display = "block";
+  statusEl.textContent = "Sending…";
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: location.href }
+  });
+  statusEl.textContent = error ? error.message : "Email sent, check your email to sign in.";
+}
+
+// Renders the mismatch state: an error plus a "Show accounts" button
+// that reveals (only) the username(s) actually linked to the typed
+// email, any of which can be clicked to sign in with that email as-is.
+function renderSignInMismatch(mismatchEl, statusEl, email, usernames) {
+  statusEl.style.display = "none";
+  mismatchEl.style.display = "block";
+  mismatchEl.innerHTML = `
+    <p class="comment-error">That username isn't linked to this email.</p>
+    <button type="button" class="btn btn-ghost signin-show-accounts">Show accounts</button>
+    <div class="signin-accounts-list"></div>
+  `;
+  mismatchEl.querySelector(".signin-show-accounts").addEventListener("click", (ev) => {
+    ev.target.style.display = "none";
+    mismatchEl.querySelector(".signin-accounts-list").innerHTML = usernames.map((u) =>
+      `<button type="button" class="btn btn-ghost signin-account-btn" data-username="${escapeHtml(u)}">@${escapeHtml(u)}</button>`
+    ).join("");
+  });
+  mismatchEl.addEventListener("click", async (ev) => {
+    const btn = ev.target.closest(".signin-account-btn");
+    if (!btn) return;
+    mismatchEl.style.display = "none";
+    await sendSignInLink(email, statusEl);
+  });
+}
+
 async function handleSignInSubmit(e) {
   e.preventDefault();
   const emailEl = document.getElementById("signin-email");
+  const usernameEl = document.getElementById("signin-username");
   const statusEl = document.getElementById("signin-status");
+  const mismatchEl = document.getElementById("signin-mismatch");
   const submitBtn = e.target.querySelector('button[type="submit"]');
   const email = emailEl.value.trim();
-  if (!email) return;
+  const username = usernameEl.value.trim();
+  if (!email || !username) return;
 
   statusEl.style.display = "block";
-  statusEl.textContent = "Sending…";
+  statusEl.textContent = "Checking…";
+  mismatchEl.style.display = "none";
   if (submitBtn) submitBtn.disabled = true;
 
   try {
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: location.href }
-    });
+    const { data: matches, error: rpcError } = await supabase.rpc("usernames_for_email", { p_email: email });
+    if (rpcError) {
+      statusEl.textContent = rpcError.message || "Something went wrong. Try again.";
+      return;
+    }
 
-    statusEl.textContent = error ? error.message : "Check your email for a sign-in link.";
+    const usernames = (matches || []).map((r) => r.username);
+    if (usernames.length === 0) {
+      localStorage.setItem(PENDING_USERNAME_KEY, username);
+      await sendSignInLink(email, statusEl);
+      return;
+    }
+    if (usernames.some((u) => u.toLowerCase() === username.toLowerCase())) {
+      await sendSignInLink(email, statusEl);
+      return;
+    }
+    renderSignInMismatch(mismatchEl, statusEl, email, usernames);
   } finally {
     if (submitBtn) submitBtn.disabled = false;
   }
@@ -384,12 +466,12 @@ document.getElementById("claim-cancel").addEventListener("click", () => {
   document.getElementById("claim-dialog").close();
 });
 
-// Same 3-step identity gate as the comment composer: sign in by email,
-// then (once, for a brand-new account) pick a username, before the
-// actual report form appears. Filing a report emails cliproots@gmail.com
-// and immediately hides the clip (RLS trigger sets claim_status =
-// 'resolved_removed', which clips_feed already excludes everywhere) -
-// it's never posted publicly, and there's no "under review" banner.
+// Same identity gate as the comment composer: sign in with email and a
+// verified username before the actual report form appears. Filing a
+// report emails cliproots@gmail.com and immediately hides the clip (RLS
+// trigger sets claim_status = 'resolved_removed', which clips_feed
+// already excludes everywhere) - it's never posted publicly, and
+// there's no "under review" banner.
 function renderClaimDialog() {
   const el = document.getElementById("claim-dialog-body");
   if (!el) return;
@@ -397,12 +479,14 @@ function renderClaimDialog() {
   if (!currentSession) {
     el.innerHTML = `
       <form id="claim-signin-form" class="signin-form">
-        <p class="signin-hint">Sign in with email to file a report.</p>
+        <p class="signin-hint">Sign in with your email and username to file a report.</p>
         <div class="comment-form-actions">
           <input class="signin-email" id="claim-signin-email" type="email" placeholder="you@example.com" required />
+          <input class="signin-email" id="claim-signin-username" type="text" placeholder="username" maxlength="30" required />
           <button type="submit" class="btn btn-primary">Email me a link</button>
         </div>
         <p id="claim-signin-status" class="signin-status" style="display:none;"></p>
+        <div id="claim-signin-mismatch" style="display:none;"></div>
       </form>
     `;
     document.getElementById("claim-signin-form").addEventListener("submit", handleClaimSignIn);
@@ -441,21 +525,37 @@ function renderClaimDialog() {
 async function handleClaimSignIn(e) {
   e.preventDefault();
   const emailEl = document.getElementById("claim-signin-email");
+  const usernameEl = document.getElementById("claim-signin-username");
   const statusEl = document.getElementById("claim-signin-status");
+  const mismatchEl = document.getElementById("claim-signin-mismatch");
   const submitBtn = e.target.querySelector('button[type="submit"]');
   const email = emailEl.value.trim();
-  if (!email) return;
+  const username = usernameEl.value.trim();
+  if (!email || !username) return;
 
   statusEl.style.display = "block";
-  statusEl.textContent = "Sending…";
+  statusEl.textContent = "Checking…";
+  mismatchEl.style.display = "none";
   if (submitBtn) submitBtn.disabled = true;
 
   try {
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: location.href }
-    });
-    statusEl.textContent = error ? error.message : "Check your email for a sign-in link.";
+    const { data: matches, error: rpcError } = await supabase.rpc("usernames_for_email", { p_email: email });
+    if (rpcError) {
+      statusEl.textContent = rpcError.message || "Something went wrong. Try again.";
+      return;
+    }
+
+    const usernames = (matches || []).map((r) => r.username);
+    if (usernames.length === 0) {
+      localStorage.setItem(PENDING_USERNAME_KEY, username);
+      await sendSignInLink(email, statusEl);
+      return;
+    }
+    if (usernames.some((u) => u.toLowerCase() === username.toLowerCase())) {
+      await sendSignInLink(email, statusEl);
+      return;
+    }
+    renderSignInMismatch(mismatchEl, statusEl, email, usernames);
   } finally {
     if (submitBtn) submitBtn.disabled = false;
   }

@@ -46,6 +46,13 @@ let isFollowing = false;
 let followerCount = 0;
 let followingCount = 0;
 
+// Same handoff as clip.js's comment composer: the sign-in form below
+// collects and verifies a username against the email up front, but a
+// brand-new account has nothing to verify against yet, so the typed
+// username is stashed here and claimed once that account's first
+// session shows up with no profile row.
+const PENDING_USERNAME_KEY = "cliproots_pending_username";
+
 // A signed-in session alone isn't enough to follow someone - the same
 // email can only ever back one auth account, but that account has no
 // visible identity (no `profiles` row) until it picks a username, so
@@ -58,7 +65,22 @@ async function loadCurrentViewerProfile() {
   }
   const { data } = await supabase
     .from("profiles").select("*").eq("id", currentSession.user.id).maybeSingle();
-  currentViewerProfile = data || null;
+  if (data) {
+    currentViewerProfile = data;
+    return;
+  }
+
+  const pending = localStorage.getItem(PENDING_USERNAME_KEY);
+  if (pending) {
+    localStorage.removeItem(PENDING_USERNAME_KEY);
+    const { data: created, error } = await supabase
+      .from("profiles").insert({ id: currentSession.user.id, username: pending }).select().single();
+    if (!error) {
+      currentViewerProfile = created;
+      return;
+    }
+  }
+  currentViewerProfile = null;
 }
 
 async function loadProfile() {
@@ -144,12 +166,14 @@ function renderFollowAction() {
   if (!currentSession) {
     el.innerHTML = `
       <form id="signin-form" class="signin-form">
-        <p class="signin-hint">Sign in with email to follow ${escapeHtml(profile.display_name || profile.username)}.</p>
+        <p class="signin-hint">Sign in with your email and username to follow ${escapeHtml(profile.display_name || profile.username)}.</p>
         <div class="comment-form-actions">
           <input class="signin-email" id="signin-email" type="email" placeholder="you@example.com" required />
+          <input class="signin-email" id="signin-username" type="text" placeholder="username" maxlength="30" required />
           <button type="submit" class="btn btn-primary">Email me a link</button>
         </div>
         <p id="signin-status" class="signin-status" style="display:none;"></p>
+        <div id="signin-mismatch" style="display:none;"></div>
       </form>
     `;
     document.getElementById("signin-form").addEventListener("submit", handleSignInSubmit);
@@ -258,24 +282,72 @@ async function handleFollowToggle() {
   }
 }
 
+async function sendSignInLink(email, statusEl) {
+  statusEl.style.display = "block";
+  statusEl.textContent = "Sending…";
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: location.href }
+  });
+  statusEl.textContent = error ? error.message : "Email sent, check your email to sign in.";
+}
+
+function renderSignInMismatch(mismatchEl, statusEl, email, usernames) {
+  statusEl.style.display = "none";
+  mismatchEl.style.display = "block";
+  mismatchEl.innerHTML = `
+    <p class="comment-error">That username isn't linked to this email.</p>
+    <button type="button" class="btn btn-ghost signin-show-accounts">Show accounts</button>
+    <div class="signin-accounts-list"></div>
+  `;
+  mismatchEl.querySelector(".signin-show-accounts").addEventListener("click", (ev) => {
+    ev.target.style.display = "none";
+    mismatchEl.querySelector(".signin-accounts-list").innerHTML = usernames.map((u) =>
+      `<button type="button" class="btn btn-ghost signin-account-btn" data-username="${escapeHtml(u)}">@${escapeHtml(u)}</button>`
+    ).join("");
+  });
+  mismatchEl.addEventListener("click", async (ev) => {
+    const btn = ev.target.closest(".signin-account-btn");
+    if (!btn) return;
+    mismatchEl.style.display = "none";
+    await sendSignInLink(email, statusEl);
+  });
+}
+
 async function handleSignInSubmit(e) {
   e.preventDefault();
   const emailEl = document.getElementById("signin-email");
+  const usernameEl = document.getElementById("signin-username");
   const statusEl = document.getElementById("signin-status");
+  const mismatchEl = document.getElementById("signin-mismatch");
   const submitBtn = e.target.querySelector('button[type="submit"]');
   const email = emailEl.value.trim();
-  if (!email) return;
+  const username = usernameEl.value.trim();
+  if (!email || !username) return;
 
   statusEl.style.display = "block";
-  statusEl.textContent = "Sending…";
+  statusEl.textContent = "Checking…";
+  mismatchEl.style.display = "none";
   if (submitBtn) submitBtn.disabled = true;
 
   try {
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: location.href }
-    });
-    statusEl.textContent = error ? error.message : "Check your email for a sign-in link.";
+    const { data: matches, error: rpcError } = await supabase.rpc("usernames_for_email", { p_email: email });
+    if (rpcError) {
+      statusEl.textContent = rpcError.message || "Something went wrong. Try again.";
+      return;
+    }
+
+    const usernames = (matches || []).map((r) => r.username);
+    if (usernames.length === 0) {
+      localStorage.setItem(PENDING_USERNAME_KEY, username);
+      await sendSignInLink(email, statusEl);
+      return;
+    }
+    if (usernames.some((u) => u.toLowerCase() === username.toLowerCase())) {
+      await sendSignInLink(email, statusEl);
+      return;
+    }
+    renderSignInMismatch(mismatchEl, statusEl, email, usernames);
   } finally {
     if (submitBtn) submitBtn.disabled = false;
   }

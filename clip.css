@@ -309,6 +309,14 @@ blockquote.quote {
 .comment-error { color: var(--alert); }
 .signin-status { color: var(--ink-dim); }
 
+.signin-accounts-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.signin-show-accounts { margin-top: 8px; }
+
 /* ---------- report a complaint / issue dialog ---------- */
 
 .clip-claim-row { margin-top: 4px; }

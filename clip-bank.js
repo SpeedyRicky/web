@@ -29,6 +29,24 @@ function formatClipTime(totalSeconds) {
 
 let currentSession = null;
 
+// Same handoff as clip.js and profiles.js: the sign-in form verifies a
+// typed username against the email up front, but a brand-new account
+// has nothing to verify against yet, so the typed username is stashed
+// here and claimed once that account's first session shows up with no
+// profile row.
+const PENDING_USERNAME_KEY = "cliproots_pending_username";
+
+async function claimPendingUsername() {
+  const { data: existing } = await supabase
+    .from("profiles").select("id").eq("id", currentSession.user.id).maybeSingle();
+  if (existing) return;
+
+  const pending = localStorage.getItem(PENDING_USERNAME_KEY);
+  if (!pending) return;
+  localStorage.removeItem(PENDING_USERNAME_KEY);
+  await supabase.from("profiles").insert({ id: currentSession.user.id, username: pending });
+}
+
 async function init() {
   const { data } = await supabase.auth.getSession();
   currentSession = data.session;
@@ -38,6 +56,7 @@ async function init() {
     return;
   }
 
+  await claimPendingUsername();
   loadBank();
 }
 
@@ -45,30 +64,83 @@ function renderSignIn() {
   container.innerHTML = `
     <div class="card" style="padding:24px 26px;">
       <form id="bank-signin-form" class="signin-form">
-        <p class="signin-hint">Sign in with email to see your clips.</p>
+        <p class="signin-hint">Sign in with your email and username to see your clip bank.</p>
         <div class="comment-form-actions">
           <input class="signin-email" id="bank-signin-email" type="email" placeholder="you@example.com" required />
+          <input class="signin-email" id="bank-signin-username" type="text" placeholder="username" maxlength="30" required />
           <button type="submit" class="btn btn-primary">Email me a link</button>
         </div>
         <p id="bank-signin-status" class="signin-status" style="display:none;"></p>
+        <div id="bank-signin-mismatch" style="display:none;"></div>
       </form>
     </div>
   `;
+
+  async function sendSignInLink(email, statusEl) {
+    statusEl.style.display = "block";
+    statusEl.textContent = "Sending…";
+    const { error } = await supabase.auth.signInWithOtp({
+      email, options: { emailRedirectTo: location.href }
+    });
+    statusEl.textContent = error ? error.message : "Email sent, check your email to sign in.";
+  }
+
+  function renderMismatch(mismatchEl, statusEl, email, usernames) {
+    statusEl.style.display = "none";
+    mismatchEl.style.display = "block";
+    mismatchEl.innerHTML = `
+      <p class="comment-error">That username isn't linked to this email.</p>
+      <button type="button" class="btn btn-ghost signin-show-accounts">Show accounts</button>
+      <div class="signin-accounts-list"></div>
+    `;
+    mismatchEl.querySelector(".signin-show-accounts").addEventListener("click", (ev) => {
+      ev.target.style.display = "none";
+      mismatchEl.querySelector(".signin-accounts-list").innerHTML = usernames.map((u) =>
+        `<button type="button" class="btn btn-ghost signin-account-btn" data-username="${escapeHtml(u)}">@${escapeHtml(u)}</button>`
+      ).join("");
+    });
+    mismatchEl.addEventListener("click", async (ev) => {
+      const btn = ev.target.closest(".signin-account-btn");
+      if (!btn) return;
+      mismatchEl.style.display = "none";
+      await sendSignInLink(email, statusEl);
+    });
+  }
+
   document.getElementById("bank-signin-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const emailEl = document.getElementById("bank-signin-email");
+    const usernameEl = document.getElementById("bank-signin-username");
     const statusEl = document.getElementById("bank-signin-status");
+    const mismatchEl = document.getElementById("bank-signin-mismatch");
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const email = emailEl.value.trim();
-    if (!email) return;
+    const username = usernameEl.value.trim();
+    if (!email || !username) return;
+
     statusEl.style.display = "block";
-    statusEl.textContent = "Sending…";
+    statusEl.textContent = "Checking…";
+    mismatchEl.style.display = "none";
     if (submitBtn) submitBtn.disabled = true;
+
     try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email, options: { emailRedirectTo: location.href }
-      });
-      statusEl.textContent = error ? error.message : "Check your email for a sign-in link.";
+      const { data: matches, error: rpcError } = await supabase.rpc("usernames_for_email", { p_email: email });
+      if (rpcError) {
+        statusEl.textContent = rpcError.message || "Something went wrong. Try again.";
+        return;
+      }
+
+      const usernames = (matches || []).map((r) => r.username);
+      if (usernames.length === 0) {
+        localStorage.setItem(PENDING_USERNAME_KEY, username);
+        await sendSignInLink(email, statusEl);
+        return;
+      }
+      if (usernames.some((u) => u.toLowerCase() === username.toLowerCase())) {
+        await sendSignInLink(email, statusEl);
+        return;
+      }
+      renderMismatch(mismatchEl, statusEl, email, usernames);
     } finally {
       if (submitBtn) submitBtn.disabled = false;
     }
