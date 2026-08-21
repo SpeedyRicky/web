@@ -136,6 +136,9 @@ async function loadQueue() {
   queueEl.querySelectorAll(".admin-delete-btn").forEach((btn) => {
     btn.addEventListener("click", () => handleDelete(btn.dataset.clipId));
   });
+  queueEl.querySelectorAll(".admin-keep-btn").forEach((btn) => {
+    btn.addEventListener("click", () => handleKeep(btn.dataset.clipId));
+  });
 }
 
 function renderClipCard(c, claims) {
@@ -170,6 +173,7 @@ function renderClipCard(c, claims) {
       <p class="meta">Clipped ${timeAgo(c.created_at)} · <a href="clip.html?slug=${encodeURIComponent(c.slug)}">direct link</a> (visitors can't see it — you can, as admin)</p>
       ${claims.length ? `<div class="comments" style="margin:14px 0;">${claimsHtml}</div>` : `<p class="feed-state" style="padding:8px 0;">No report on file for this clip.</p>`}
       <div class="claim-actions" style="justify-content:flex-start;margin-top:8px;">
+        <button class="btn btn-ghost admin-keep-btn" type="button" data-clip-id="${escapeHtml(c.id)}">Keep — dismiss report</button>
         <button class="btn btn-ghost admin-delete-btn" type="button" data-clip-id="${escapeHtml(c.id)}" style="color:var(--alert);border-color:var(--alert);">Delete permanently</button>
       </div>
     </div>
@@ -190,6 +194,28 @@ async function handleDelete(clipId) {
     loadQueue();
   } catch (e) {
     alert(e.message || "Couldn't delete this clip. Try again.");
+    if (btn) btn.disabled = false;
+  }
+}
+
+// "Keep" moves claim_status off resolved_removed - clips_feed excludes
+// only that exact value, so any other status (resolved_kept here) makes
+// the clip visible again everywhere. resolved_kept also permanently
+// shields this clip from the repeat-infringer trigger's future cascades.
+async function handleKeep(clipId) {
+  if (!confirm("Restore this clip? It will become publicly visible again.")) return;
+  const btn = document.querySelector(`.admin-keep-btn[data-clip-id="${CSS.escape(clipId)}"]`);
+  if (btn) btn.disabled = true;
+  try {
+    const { error } = await supabase.from("clips").update({ claim_status: "resolved_kept" }).eq("id", clipId);
+    if (error) {
+      alert(error.message || "Couldn't restore this clip. Try again.");
+      if (btn) btn.disabled = false;
+      return;
+    }
+    loadQueue();
+  } catch (e) {
+    alert(e.message || "Couldn't restore this clip. Try again.");
     if (btn) btn.disabled = false;
   }
 }
